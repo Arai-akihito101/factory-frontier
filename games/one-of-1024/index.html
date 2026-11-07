@@ -16,7 +16,7 @@
  <div class="welcome-copy">
   <span class="eyebrow"><span class="eyebrow-line"></span> A LIFE YOU HAVEN'T LIVED</span>
   <h1>違う道を選んだら、<br><em>違う人生</em>が待っている。</h1>
-  <p class="lead">18歳、最初の二択。そこから先は、あなたの決断によって仕事も、仲間も、次に起きる事件も変わっていく。</p>
+  <p class="lead">9歳、最初の二択。そこから先は、あなたの決断によって仕事も、仲間も、次に起きる事件も変わっていく。</p>
   <p class="welcome-desc">同じ二択は二度と戻ってこない。10回の選択は一度も合流することなく、1,024の終点へ。人生を終えたら、好きな分岐点まで戻って別の道を試せる。</p>
   <div class="welcome-actions"><button id="startButton" class="primary-button"><span>人生を始める</span><span>↗</span></button><button id="resume" class="secondary-button hidden">前の続きから</button></div>
   <div class="welcome-facts"><div><b>10</b><span>回の決断</span></div><div><b>1,024</b><span>異なる経路</span></div><div><b>64</b><span>第6回目の選択肢</span></div></div>
@@ -45,29 +45,42 @@
     <div class="steps-shell"><div class="steps-track"><div id="stepProgress" class="steps-progress"></div></div><div id="stepDots" class="steps-dots"></div></div>
     <div class="route-code"><span>これまでの経路</span><b id="currentRoute">未選択</b></div>
    </div>
-   <div id="notice" class="outcome hidden" role="status" aria-live="polite"></div>
-   <div class="world-scene" id="scene">
-     <div class="scene-aura"></div><div class="scene-orbit orbit-one"></div><div class="scene-orbit orbit-two"></div>
-     <div class="scene-horizon"></div><div class="scene-ground"></div><div class="scene-symbol" id="sceneSymbol" aria-hidden="true">↗</div>
-     <div class="scene-top"><span class="scene-label" id="sceneTrack">出発点</span><span class="scene-age" id="sceneYears">18歳</span></div>
-     <div class="scene-caption"><span id="scenePlace">潮見町</span><strong id="sceneJob">高校卒業</strong><small id="sceneLog">人生の起点</small></div>
-   </div>
-   <section class="story" aria-label="人生の選択">
+   
+   <section class="story" id="story" aria-label="人生の選択">
      <div class="story-overline" id="decisionNumber">DECISION 01 / 10</div>
-     <h2 id="sceneTitle">18歳。二つの出発点</h2>
+     <h2 id="sceneTitle">9歳。放課後の居場所</h2>
      <p id="sceneStory">次に進む道を選ぼう。</p>
+     <div class="world-scene" id="scene" data-zone="coast">
+      <div class="scene-aura"></div>
+      <div class="life-landscape"><div class="life-sun"></div><div class="life-hill back"></div><div class="life-hill front"></div><div class="life-city"></div></div>
+      <svg class="life-road" viewBox="0 0 900 620" preserveAspectRatio="none" aria-hidden="true">
+       <defs><linearGradient id="lifeRoadFill" x1="0" x2="0" y1="1" y2="0"><stop stop-color="#ecd2a6"/><stop offset="1" stop-color="#cfb18a"/></linearGradient></defs>
+       <path class="road-ground" d="M0 362 Q210 338 401 357 T900 345 L900 620 L0 620Z"/>
+       <path class="road-shadow" d="M405 620 Q419 515 441 428 L446 354 Q382 294 235 255 L208 210 L242 196 Q389 251 459 334 Q524 245 664 193 L691 209 L658 258 Q522 302 478 356 L478 428 Q493 535 533 620Z"/>
+       <path class="road-floor" d="M415 620 Q430 520 449 429 L448 359 Q389 308 241 258 L212 219 L242 209 Q396 262 460 340 Q528 263 657 209 L685 222 L654 269 Q527 313 473 360 L475 429 Q489 531 520 620Z"/>
+       <path class="road-dash" d="M468 615 Q464 500 462 423 L462 362"/>
+       <path id="roadChoiceA" class="road-arm" d="M461 361 Q385 282 228 226"/>
+       <path id="roadChoiceB" class="road-arm" d="M461 361 Q545 280 668 223"/>
+       <path class="road-trim" d="M415 620 Q430 520 449 429 L448 359 Q389 308 212 219"/>
+       <path class="road-trim" d="M520 620 Q489 531 475 429 L473 360 Q527 313 685 222"/>
+       <circle class="road-marker" cx="462" cy="440" r="8"/>
+      </svg>
+      <div class="scene-symbol" id="sceneSymbol" aria-hidden="true">↗</div>
+      <div class="scene-top"><span class="scene-label" id="sceneTrack">子ども時代</span><span class="scene-age" id="sceneYears">9歳</span></div>
+      <div class="scene-caption"><span id="scenePlace">潮見町</span><strong id="sceneJob">小学生</strong><small id="sceneLog">ここから始まる</small></div>
+      <div id="roadJourney" class="road-journey" aria-label="これまでの道">まだ歩いていない道</div>
      <div id="decisions">
       <div class="choice-grid">
        <button type="button" class="choice-button choice-a" id="option0">
          <span class="choice-letter">A <span>選択肢 1</span></span>
-         <strong class="choice-headline">大学に進む</strong>
+         <strong class="choice-headline">観察会に参加</strong>
          <span class="choice-details"></span>
          <span class="choice-effects"></span>
          <span class="choice-arrow">この人生へ進む <b>↗</b></span>
        </button>
        <button type="button" class="choice-button choice-b" id="option1">
          <span class="choice-letter">B <span>選択肢 2</span></span>
-         <strong class="choice-headline">就職する</strong>
+         <strong class="choice-headline">工作教室へ行く</strong>
          <span class="choice-details"></span>
          <span class="choice-effects"></span>
          <span class="choice-arrow">この人生へ進む <b>↗</b></span>
@@ -75,6 +88,8 @@
       </div>
       <p id="decisionHint" class="decision-hint">AまたはBで進む。後から別の道を選ぶこともできる。</p>
      </div>
+     </div> <!-- /road scene -->
+     <div id="notice" class="outcome hidden" role="status" aria-live="polite"></div>
      <div class="ending hidden" id="ending">
        <div class="ending-mark">THE LIFE YOU LIVED <span>✦</span></div>
        <h3 id="endingTitle">あなたが選んだ人生</h3><div class="ending-code" id="endingCode">LIFE #AAAAAAAAAA</div>
@@ -104,7 +119,7 @@
   </aside>
 </section>
 </main>
-<footer class="sitefoot"><span>1/2<sup>10</sup> · LIFE IN BRANCHES · β 1.0</span><span>記録はこの端末のブラウザーに保存されます。アカウント不要。</span><a href="../../">FACTORY FRONTIER</a></footer>
-<dialog id="helpDialog" class="help-dialog"><h2>遊び方</h2><p>人生は18歳から始まり、10回の重要な決断で分岐します。毎回AかBのどちらかを選んでください。</p><p>同じ段階でも、それまで選んだ道が違えば、仕事・出会い・出来事が変わります。どの人生も別の人生とは合流しません。</p><p>右の「分岐の記録」から過去の決断へ戻れます。発見した結末は消えません。キーボードの <kbd>1</kbd> / <kbd>2</kbd> または <kbd>A</kbd> / <kbd>B</kbd> でも選択できます。</p><p>初期試作では最初の6段階を個別に作り、その後は状態と履歴に合わせて事件を発生させています。</p><button id="helpClose" type="button" class="primary-button">閉じる</button></dialog>
-<script src="./data.js"></script><script src="./app.js"></script>
+<footer class="sitefoot"><span>1/2<sup>10</sup> · LIFE IN BRANCHES · β 1.1</span><span>記録はこの端末のブラウザーに保存されます。アカウント不要。</span><a href="../../">FACTORY FRONTIER</a></footer>
+<dialog id="helpDialog" class="help-dialog"><h2>遊び方</h2><p>人生は9歳から始まり、10回の重要な決断で分岐します。毎回AかBのどちらかを選んでください。</p><p>同じ段階でも、それまで選んだ道が違えば、仕事・出会い・出来事が変わります。どの人生も別の人生とは合流しません。</p><p>右の「分岐の記録」から過去の決断へ戻れます。発見した結末は消えません。キーボードの <kbd>1</kbd> / <kbd>2</kbd> または <kbd>A</kbd> / <kbd>B</kbd> でも選択できます。</p><p>初期試作では最初の6段階を個別に作り、その後は状態と履歴に合わせて事件を発生させています。</p><button id="helpClose" type="button" class="primary-button">閉じる</button></dialog>
+<script src="./data.js"></script><script src="./story-v2.js"></script><script src="./app.js"></script>
 </body></html>
