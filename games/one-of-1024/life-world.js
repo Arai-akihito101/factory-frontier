@@ -2,7 +2,10 @@
 (function(){
 const $=id=>document.getElementById(id);
 function rect(x,y,w,h,c){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;}
-function tree(x,y,color,small=false){const k=small?.7:1;return `<g transform="translate(${x} ${y}) scale(${k})">${rect(14,39,7,22,'#8c7757')}${rect(6,12,24,38,color)}${rect(0,22,36,22,color)}${rect(11,5,15,42,color)}${rect(7,24,8,6,'#a6b384')}${rect(15,12,8,5,'#a6b384')}</g>`;}
+function tree(x,y,color,small=false){
+ const k=small?.75:1;
+ return `<g transform="translate(${x} ${y}) scale(${k})">${rect(-2,55,42,4,'#9dad88')}${rect(15,32,6,26,'#765f48')}${rect(17,38,2,18,'#a0845b')}${rect(8,8,20,38,'#4f705c')}${rect(2,18,32,22,'#4f705c')}${rect(0,24,36,10,'#4f705c')}${rect(8,6,18,6,color)}${rect(4,14,28,18,color)}${rect(8,32,22,8,color)}${rect(10,10,12,4,'#a9bd84')}${rect(6,18,8,4,'#a9bd84')}${rect(24,26,6,6,'#688863')}${rect(10,38,6,4,'#688863')}</g>`;
+}
 function building(arc){
  const colors=['#bd9383','#d6b480','#b2bda6','#94b2b2','#b3b0a4','#9cafa9','#a7b69b','#c7a78b'],c=colors[arc??7];
  if(arc===3)return `<g transform="translate(420 85)">${rect(0,20,90,10,'#b9d7ca')}${rect(10,13,76,17,'#e7e2c5')}${rect(25,0,35,18,'#f3ecd5')}${rect(29,4,10,8,'#7fa2a0')}${rect(43,4,10,8,'#7fa2a0')}${rect(17,30,61,6,'#687e70')}${rect(5,36,83,3,'#93b6ad')}</g>`;
@@ -21,7 +24,7 @@ function render(s){
  art+=`<path d="M0 105V87h45V72h37v17h40v16h67V81h35V67h44v21h43v17h53V86h45V70h43v24h50v11h58V82h40v23z" fill="#acbfa0"/>`;
  if(world==='coast')art+=rect(0,124,99,136,'#9bbfbc')+rect(0,145,85,4,'#c5d8cb')+rect(0,179,68,3,'#c5d8cb')+rect(0,224,91,4,'#c5d8cb');
  art+=building(s.arc);
- art+=tree(67,76,greens[season])+tree(118,98,greens[season],true)+tree(535,119,greens[season]);
+ art+=tree(55,63,greens[season])+tree(106,59,greens[season],true)+tree(528,137,greens[season]);
  if(world==='city')art+=rect(192,65,32,42,'#aab5a5')+rect(231,52,29,55,'#b9b9a4')+rect(197,72,8,8,'#dce2ce')+rect(238,61,7,8,'#e8e3c9');
  for(let i=0;i<22;i++){const x=(i*71+19)%580,y=160+(i*29)%94;if(x>228&&x<370)continue;art+=rect(x,y,3,6,'#8eaa7c')+rect(x-2,y+2,7,2,'#8eaa7c');if(i%3===0)art+=rect(x,y-2,3,3,season===2?'#c47f60':'#e9d8a0');}
  ground.innerHTML=art;

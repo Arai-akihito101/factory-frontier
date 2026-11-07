@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f3efe4">
 <meta name="description" content="LIFE 1024 — 5歳から人生が自動で進み、10回の分かれ道から1,024通りの未来が生まれる無料の人生シミュレーション。ログイン不要。">
 <title>LIFE 1024｜人生シミュレーション</title>
-<link rel="stylesheet" href="./life-ui.css?v=4.0">
+<link rel="stylesheet" href="./life-ui.css?v=4.1">
 </head>
 <body>
 <div class="app">
@@ -26,12 +26,12 @@
 <div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
   <svg class="walker-road" viewBox="0 0 600 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <g id="pixelLandscape" shape-rendering="crispEdges"></g>
-    <path d="M300 277 V177 Q260 140 135 99 M300 177 Q340 140 465 99" fill="none" stroke="#b6a580" stroke-width="49"/>
-    <path d="M300 277 V177 Q260 140 135 99 M300 177 Q340 140 465 99" fill="none" stroke="#e7d4a8" stroke-width="43"/>
-    <path id="routeLeft" class="road-fork" d="M300 177 Q260 140 135 99"/>
-    <path id="routeRight" class="road-fork" d="M300 177 Q340 140 465 99"/>
-    <g fill="#ccba92" shape-rendering="crispEdges"><rect x="286" y="236" width="4" height="2"/><rect x="309" y="215" width="6" height="2"/><rect x="259" y="154" width="4" height="2"/><rect x="380" y="122" width="5" height="2"/></g>
-    <g id="walkerPawn" transform="translate(300 226)"><ellipse cy="1" rx="23" ry="6" fill="#4d6049" opacity=".2"/><g id="walkerPixels" shape-rendering="crispEdges"></g></g>
+    <path shape-rendering="crispEdges" d="M248 260V240h8v-22h8v-22h8v-22h-20v-10h-24v-10h-26v-10h-26v-10h-24v-10h-24v-10h-12V96h24v8h24v10h26v10h26v10h28v10h28v10h28v-10h28v-10h28v-10h26v-10h26v-10h24v-8h24v18h-12v10h-24v10h-24v10h-26v10h-26v10h-24v10h-20v22h8v22h8v22h8v20z" fill="#b59f79"/>
+    <path shape-rendering="crispEdges" d="M256 260v-20h8v-22h8v-22h8v-26h-24v-10h-24v-10h-26v-10h-26v-10h-24v-10h-24v-12h8v4h24v10h26v10h26v10h28v10h28v10h28v-10h28v-10h28v-10h26v-10h26v-10h24v-4h8v12h-24v10h-24v10h-26v10h-26v10h-24v10h-24v26h8v22h8v22h8v20z" fill="#e3cd9e"/>
+    <path id="routeLeft" class="road-fork" d="M300 177 Q260 140 135 108"/>
+    <path id="routeRight" class="road-fork" d="M300 177 Q340 140 465 108"/>
+    <g fill="#c9b185"><path d="M286 232h8v2h-8z M310 208h6v2h-6z M296 190h4v2h-4z M242 151h6v2h-6z M350 151h6v2h-6z"/></g>
+    <g id="walkerPawn" transform="translate(300 226)"><ellipse cy="1" rx="16" ry="4" fill="#4d6049" opacity=".2"/><g id="walkerPixels" shape-rendering="crispEdges"></g></g>
   </svg>
   <span id="seasonLabel" class="season-label">春の気配</span>
  </div>
@@ -78,13 +78,13 @@
   <section class="panel collection" id="comparisonPanel" hidden><div class="panel-kicker">もうひとつの人生</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
 </aside>
 </main>
-<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 4.0</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 4.1</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
 </div>
 <dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。登場人物は出会いの場面から登場し、「出会った人」で紹介を読み返せます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の場面へ」で一つずつ進められます。「この時期をまとめて進む」で選択まで移動できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
 <script src="./life-v2-data.js?v=2.1"></script>
-<script src="./life-v3-stories.js?v=4.0"></script>
-<script src="./life-connections.js?v=4.0"></script>
-<script src="./life-world.js?v=4.0"></script>
-<script src="./life-avatar.js?v=4.0"></script>
-<script src="./life-v2.js?v=4.0"></script>
+<script src="./life-v3-stories.js?v=4.1"></script>
+<script src="./life-connections.js?v=4.1"></script>
+<script src="./life-world.js?v=4.1"></script>
+<script src="./life-avatar.js?v=4.1"></script>
+<script src="./life-v2.js?v=4.1"></script>
 </body></html>

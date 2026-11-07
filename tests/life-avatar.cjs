@@ -18,6 +18,9 @@ await page.waitForTimeout(1100);assert.equal(await page.evaluate(()=>LIFE_TEST.g
 assert.equal(await page.locator('#walkerScene').getAttribute('data-age'),'9');
 const sprites=await page.evaluate(()=>{
  const A=LIFE_AVATAR;
+ const sample={age:31,arc:4,health:90};
+ const assertDirections=[A.sprite(sample,0,'front'),A.sprite(sample,0,'back'),A.sprite(sample,0,'side')];
+ if(new Set(assertDirections).size!==3)throw new Error('Three directional sprites required');
  const outfits=Array.from({length:8},(_,arc)=>A.sprite({age:31,arc,health:90},0));
  const ages=[6,15,20,31,56,78].map(age=>A.sprite({age,arc:6,college:true,health:90,retired:age>=67},0));
  return {outfits:new Set(outfits).size,ages:new Set(ages).size,old:A.appearance({age:78,arc:6,health:90}),unwell:A.appearance({age:78,arc:6,health:35})};
