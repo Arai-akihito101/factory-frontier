@@ -106,3 +106,16 @@ dialog::backdrop{background:#18362b8a}dialog h2{font-family:var(--serif);font-si
 }
 @media(max-width:360px){.brand-detail small{display:none}.fork-card strong{font-size:12px}.fork-desc{display:none}.fork-card{min-height:114px;top:35%}.stage{height:510px}.fork-question{bottom:15%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* LIFE 1024 nameplate — preserve the existing life-road visual identity. */
+.brand-mark{font-family:Georgia,'Times New Roman',serif;font-size:31px;letter-spacing:-.045em}
+.brand-detail{letter-spacing:.06em}
+@media(max-width:600px){
+ .brand{gap:8px}
+ .brand-mark{font-size:23px;letter-spacing:-.045em}
+ .brand-detail{font-size:8px}
+}
+@media(max-width:390px){
+ .brand-mark{font-size:22px}
+ .brand-detail{display:none}
+}
