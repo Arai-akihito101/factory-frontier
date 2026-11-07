@@ -11,12 +11,12 @@ assert.equal(await pose(),'translate(300 218)');
 await page.click('#pause');const stopped=await scenery();await page.waitForTimeout(260);assert.equal(await scenery(),stopped);
 await page.click('#skip');await page.click('#choice0');await page.waitForTimeout(240);
 assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'0');
-const left=await pose();assert.equal(Number(left.match(/ ([^)]+)\)/)[1]),218,'Walking stays on the level footpath');assert.equal(left,'translate(300 218)');assert.match(await page.locator('#walkerPixels').getAttribute('transform'),/scale\(2 2\)/);
+const left=await pose();assert.ok(Number(left.match(/ ([^)]+)\)/)[1])<184,'A follows upper road');
 // Rewind during walking must invalidate the pending transition.
-await page.click('#restart');await page.waitForTimeout(1100);assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'');
+await page.click('#restart');await page.waitForTimeout(2000);assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'');
 await page.click('#skip');await page.click('#choice1');await page.waitForTimeout(240);
-assert.equal(await pose(),'translate(300 218)');assert.match(await page.locator('#walkerPixels').getAttribute('transform'),/scale\(2 2\)/);
-await page.waitForTimeout(1100);assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'1');
+assert.ok(Number((await pose()).match(/ ([^)]+)\)/)[1])>184,'B follows lower road');
+await page.waitForTimeout(2000);assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'1');
 assert.equal(await page.locator('#walkerScene').getAttribute('data-age'),'9');
 const sprites=await page.evaluate(()=>{
  const A=LIFE_AVATAR;

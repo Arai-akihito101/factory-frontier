@@ -111,7 +111,7 @@ function sprite(s,frame=0,direction='front'){
 }
 function draw(frame,x,y){
  if(!state)return;
- const direction=mode==='walk'||departure?'side':'front';
+ const direction=mode==='walk'||mode==='fork'||departure?'side':'front';
  const key=[state.age,state.arc,state.college,state.retired,state.health<50,frame,direction].join('/');
  if(key!==lastKey){body.innerHTML=sprite(state,frame,direction);lastKey=key;}
  const scale=2,flip=1;
@@ -126,14 +126,17 @@ function tick(now){
  const frame=walking&&!reduced.matches?Math.floor(now/(state.age>=67?200:130))%4:0;
  if(departure){
   const t=reduced.matches?1:Math.min(1,elapsed/departure.duration),e=t*t*(3-2*t);
-  moveWorld(scrollBase+60*e);draw(frame,300,218);
+  const road=$('route'+(departure.bit===0?'Left':'Right'));
+  const point=road.getPointAtLength(road.getTotalLength()*e);
+  draw(frame,point.x,point.y);
+  document.querySelector('.walker-road').style.opacity=String(1-Math.max(0,(t-.78)/.22));
   if(t===1){const done=departure.resolve;departure=null;mode='idle';done();return;}
- }else{if(mode==='walk')moveWorld(scrollBase+Math.min(elapsed,duration)*.016);draw(frame,300,218);}
+ }else{if(mode==='walk')moveWorld(scrollBase+Math.min(elapsed,duration)*.016);draw(frame,mode==='fork'?260:300,mode==='fork'?184:218);}
  if(walking&&!reduced.matches)frameId=requestAnimationFrame(tick);
 }
 function cancel(){if(frameId)cancelAnimationFrame(frameId);frameId=0;if(departure){const done=departure.resolve;departure=null;done();}}
-function show(s,nextMode='idle',ms=6000){cancel();state={...s};mode=nextMode;pausedAt=null;duration=ms;scrollBase=scrollDistance;started=performance.now();updateCaption();tick(started);}
-function depart(bit,fast=false){cancel();pausedAt=null;mode='depart';scrollBase=scrollDistance;started=performance.now();updateCaption();return new Promise(resolve=>{departure={bit,resolve,duration:fast?450:1050};tick(started);});}
+function show(s,nextMode='idle',ms=6000){cancel();state={...s};mode=nextMode;pausedAt=null;duration=ms;scrollBase=scrollDistance;started=performance.now();updateCaption();const scene=document.querySelector('.walker-road');scene.style.transition=reduced.matches?'none':'opacity 300ms';scene.style.opacity='1';tick(started);}
+function depart(bit,fast=false){cancel();pausedAt=null;mode='depart';document.querySelector('.walker-road').style.transition='none';scrollBase=scrollDistance;started=performance.now();updateCaption();return new Promise(resolve=>{departure={bit,resolve,duration:fast?750:1800};tick(started);});}
 function pause(){if(pausedAt===null)pausedAt=performance.now();if(frameId)cancelAnimationFrame(frameId);frameId=0;}
 function resume(){if(pausedAt!==null){started+=performance.now()-pausedAt;pausedAt=null;}if(!frameId&&(mode==='walk'||mode==='depart'))frameId=requestAnimationFrame(tick);}
 reduced.addEventListener('change',()=>{if(state){pause();tick(performance.now());}});

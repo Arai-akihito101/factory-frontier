@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f3efe4">
 <meta name="description" content="LIFE 1024 — 5歳から人生が自動で進み、10回の分かれ道から1,024通りの未来が生まれる無料の人生シミュレーション。ログイン不要。">
 <title>LIFE 1024｜人生シミュレーション</title>
-<link rel="stylesheet" href="./life-ui.css?v=5.2">
+<link rel="stylesheet" href="./life-ui.css?v=5.3">
 </head>
 <body>
 <div class="app">
@@ -26,8 +26,20 @@
 <div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
   <svg class="walker-road" viewBox="0 0 600 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <g id="pixelLandscape" shape-rendering="crispEdges"></g>
-    <path id="routeLeft" class="road-fork" d="M312 225H404"/>
-    <path id="routeRight" class="road-fork" d="M312 225H404"/>
+    <g id="forkLandscape" class="fork-landscape">
+      <path d="M0 0H600V260H0z" fill="#dbe6d8"/>
+      <path d="M0 70H600V260H0z" fill="#b1c59a"/>
+      <path d="M0 68V54h44V42h50v12h56v14h60V50h56V40h50v14h52v14h66V48h58v12h108v10z" fill="#91ad8b"/>
+      <g fill="#eff2df"><path d="M45 22h24V14h32v8h20v8H45z M380 27h20V19h30v8h24v8h-74z"/></g>
+      <g fill="#8daa7e"><path d="M36 110h5v8h-5z M74 232h6v8h-6z M176 99h4v7h-4z M340 79h5v7h-5z M493 174h5v8h-5z M550 76h5v7h-5z"/></g>
+      <path d="M-20 184H260 Q325 184 386 124H620 M260 184 Q325 184 386 232H620" fill="none" stroke="#a99572" stroke-width="36" stroke-linejoin="round"/>
+      <path d="M-20 184H260 Q325 184 386 124H620 M260 184 Q325 184 386 232H620" fill="none" stroke="#e6d3a8" stroke-width="30" stroke-linejoin="round"/>
+      <path id="routeLeft" class="road-fork" d="M260 184 Q325 184 386 124H520"/>
+      <path id="routeRight" class="road-fork" d="M260 184 Q325 184 386 232H520"/>
+      <g transform="translate(350 162)" shape-rendering="crispEdges"><path d="M0 0h4v41H0z" fill="#826c51"/><path d="M-21 3h43v16h-43z" fill="#f3e8c9"/><path d="M-21 22h43v16h-43z" fill="#f3e8c9"/></g>
+      <text x="352" y="177" text-anchor="middle" font-size="12" fill="#986344">A ↗</text><text x="352" y="196" text-anchor="middle" font-size="12" fill="#52795c">B ↘</text>
+      <text x="452" y="64" text-anchor="middle" font-size="12" fill="#805c3e">A の道</text><text x="452" y="174" text-anchor="middle" font-size="12" fill="#486b51">B の道</text>
+    </g>
     <g id="walkerPawn" transform="translate(300 218)"><path d="M-12 0h24v2h4v2h-32v-2h4z" fill="#514d49" opacity=".18"/><g id="walkerPixels" shape-rendering="crispEdges"></g></g>
   </svg>
   <span id="seasonLabel" class="season-label">春の気配</span>
@@ -41,8 +53,8 @@
   </div>
   <div id="fork" class="fork hidden">
     <div class="fork-caption" id="forkCaption">人生の分かれ道</div><h2 class="fork-head" id="forkHead">6歳 — 最初の分かれ道</h2>
-    <button class="fork-card left" id="choice0" type="button"><span class="fork-index">A <span>これからの選択</span></span><strong id="choiceTitle0"></strong><span id="choiceSub0" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
-    <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B <span>これからの選択</span></span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <button class="fork-card left" id="choice0" type="button"><span class="fork-index">A <span>右上の道 ↗</span></span><strong id="choiceTitle0"></strong><span id="choiceSub0" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B <span>右下の道 ↘</span></span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
     <p class="fork-question" id="forkQuestion">どちらの道を選ぶ？</p><button id="forkPerson" class="scene-person hidden" type="button"></button>
   </div>
   <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
@@ -75,13 +87,13 @@
   <section class="panel collection" id="comparisonPanel" hidden><div class="panel-kicker">もうひとつの人生</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
 </aside>
 </main>
-<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 5.2</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 5.3</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
 </div>
 <dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。登場人物は出会いの場面から登場し、「出会った人」で紹介を読み返せます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の場面へ」で一つずつ進められます。「この時期をまとめて進む」で選択まで移動できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
 <script src="./life-v2-data.js?v=2.1"></script>
-<script src="./life-v3-stories.js?v=5.2"></script>
-<script src="./life-connections.js?v=5.2"></script>
-<script src="./life-world.js?v=5.2"></script>
-<script src="./life-avatar.js?v=5.2"></script>
-<script src="./life-v2.js?v=5.2"></script>
+<script src="./life-v3-stories.js?v=5.3"></script>
+<script src="./life-connections.js?v=5.3"></script>
+<script src="./life-world.js?v=5.3"></script>
+<script src="./life-avatar.js?v=5.3"></script>
+<script src="./life-v2.js?v=5.3"></script>
 </body></html>

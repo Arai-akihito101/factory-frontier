@@ -193,7 +193,7 @@ function renderFork(){
  $("latest").textContent=s.age+"歳。「"+node.title+"」。これまでの暮らしを踏まえて、次の道を選びます。";
  phase="choice";
  $("choice0").disabled=false;$("choice1").disabled=false;
- window.LIFE_AVATAR?.show(s,"idle");
+ window.LIFE_AVATAR?.show(s,"fork");
 }
 function compareHtml(a,b){
  if(!a||!b)return "二つの人生を終えると、違いを比べられます。";
