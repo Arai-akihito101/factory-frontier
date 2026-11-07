@@ -15,7 +15,7 @@ function save(){try{store.current=path;localStorage.setItem(STORAGE,JSON.stringi
 function initial(){return {age:18,wealth:80,debt:0,skill:16,bond:52,health:84,freedom:42,pressure:16,reputation:14,
   job:"高校卒業",city:"潮見町",mentor:"幼なじみの遥",income:180,world:"出発点",project:"これからの人生",track:"",
   history:[],milestones:["18歳、潮見町で高校を卒業した。"]};}
-function capStats(s){["skill","bond","health","freedom","pressure","reputation"].forEach(k=>s[k]=clamp(Math.round(s[k]),0,100));s.wealth=Math.round(s.wealth);s.debt=Math.max(0,Math.round(s.debt));}
+function capStats(s){["skill","bond","health","freedom","pressure","reputation"].forEach(k=>s[k]=clamp(Math.round(s[k]),0,100));s.wealth=Math.round(s.wealth);s.debt=Math.max(0,Math.round(s.debt));if(s.wealth<0){s.debt+=-s.wealth;s.wealth=0;}}
 function yearsPass(s,step){
  if(step>=9)return;
  const start=D.ages[step],next=D.ages[step+1],yrs=next-start;
