@@ -1,0 +1,23 @@
+# LIFE 1024 — Story 3.0
+
+The first three binary decisions select one of eight authored life arcs. Each arc
+has seven adult decisions: 8 × 2^7 = 1,024 complete lives. The 56 adult situations
+have 112 authored consequences. This is not 1,024 independently authored novels:
+scenes and settings are shared within an arc, while each life retains every choice.
+
+`life-v3-stories.js` replaces the old common decision schedule and hash-selected
+incidents. Early commitments, shared/separate homes, ownership, response to a
+crisis, and succession remain in state and affect later scenes, costs and options.
+Neither random incidents nor resource requirements make any branch inaccessible.
+Costs beyond savings become debt; the game never silently disables an option.
+
+The ending records all seven adult decisions and their consequences. Earlier
+choices determine the arc. The journal now retains childhood and between-choice
+scenes. Comparison shows the decisions that differed. Story 3 uses a new storage
+key so previous-version choices are not reinterpreted as a different life.
+
+Validation: `node tests/life-1024-model.cjs` exhaustively checks all leaves and
+1,023 decision prefixes, deterministic replay, two available choices, chronological
+ages, finite numeric state, retention of consequences and 1,024 distinct ending
+texts. `node tests/life-1024.cjs` adds browser interaction checks when Playwright
+Chromium is available. It requires a local static server on port 8765 or LIFE_URL.

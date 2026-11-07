@@ -3,7 +3,7 @@
 "use strict";
 const C=window.LIFE_CONTENT;if(!C){document.body.textContent="ゲームのデータを読み込めませんでした。ページを再読み込みしてください。";return;}
 const $=id=>document.getElementById(id);
-const key="one-of-1024-cinematic-v2";
+const key="life-1024-story-v3";
 const defaultSaved=()=>({current:"",found:{},last:null,best:null,plays:0,visited:{}});
 let saved=defaultSaved();
 try{const v=JSON.parse(localStorage.getItem(key)||"null");if(v&&typeof v==="object")saved=Object.assign(defaultSaved(),v);}catch(_){}
@@ -93,7 +93,8 @@ function summarize(s){
  const job=s.college?"学び続ける道を経て、働き始めた。":"若いうちから働き始め、自分で生活を築いた。";
  const feeling=s.joy>=72?"振り返ると、充実した日々が多かった。":s.joy>=44?"楽しい日も、苦しい日もあった。":"思い通りにいかない時期も、長く続いた。";
  let title=s.joy>75&&s.bond>65?"暮らしを大切にできた人生":money>1000&&s.joy<55?"豊かさと引き換えに走った人生":s.freedom>67?"自分の道を歩いた人生":s.bond>70?"たくさんの人と生きた人生":s.college?"学びから広がった人生":"選び続けた人生";
- return {title,text:job+" "+family+"。"+place+"で長い時間を過ごした。"+moneyLine+bond+feeling,net:money,place,home:s.home,career:s.job,bond:s.bond,joy:s.joy,age:s.age,children:s.children,partner:s.partner,savings:s.savings,debt:s.debt};
+ const narrative=C.ending?C.ending(s):null;
+ return {title:narrative?narrative.title:title,text:narrative?narrative.text:job+" "+family+"。"+place+"で長い時間を過ごした。"+moneyLine+bond+feeling,route:s.path,decisions:s.choices.map(h=>({age:h.age,title:h.title})),net:money,place,home:s.home,career:s.job,bond:s.bond,joy:s.joy,age:s.age,children:s.children,partner:s.partner,savings:s.savings,debt:s.debt};
 }
 function renderStats(s){
  $("age").textContent=s.age;
@@ -124,7 +125,7 @@ function renderJournal(s){
  const opened=Object.keys(saved.found||{}).length;
  $("found").textContent=opened+" / 1,024";
  $("count").textContent=path.length===10?"10 / 10":String(path.length+1).padStart(2,"0")+" / 10";
- const journey=s.choices.slice(-8);
+ const journey=s.story;
  const route=path.split("");
  let thread="";
  for(let i=0;i<10;i++){
@@ -147,7 +148,7 @@ function renderBeat(index){
  $("travelBody").textContent=b.text;
  $("latest").textContent=b.age+"歳。"+b.text;
  $("phaseLabel").textContent="時間が流れていく";
- $("stage").classList.add("moving");
+ $("stage").classList.remove("endstage");$("stage").classList.add("moving");
  $("stage").classList.remove("forking");
  $("fork").classList.add("hidden");$("ending").classList.add("hidden");$("travel").classList.remove("hidden");
  phase="travel";
@@ -170,6 +171,7 @@ function compareHtml(a,b){
  const diff=a.net-b.net, connection=a.bond-b.bond;
  const sign=n=>n>0?"＋"+int(n):int(n);
  return '<div class="compare-names"><div><small>この人生</small><strong>'+esc(a.title)+'</strong></div><div><small>前の人生</small><strong>'+esc(b.title)+'</strong></div></div>'+
+  (a.decisions&&b.decisions?'<div class="compare-turns">'+a.decisions.map((h,i)=>h.title!==b.decisions[i]?.title?'<p><b>'+h.age+'歳の分かれ道</b><br>今回：'+esc(h.title)+'<br>前回：'+esc(b.decisions[i]?.title||'記録なし')+'</p>':'').join('')+'</div>':'')+
   '<div class="compare-values"><div><span>住んだ場所</span><b>'+esc(a.place)+' / '+esc(b.place)+'</b></div><div><span>家族の形</span><b>'+(a.partner?"同居":"一人暮らし")+' / '+(b.partner?"同居":"一人暮らし")+'</b></div><div><span>正味の貯え</span><b>'+sign(diff)+'万円</b></div><div><span>つながりの差</span><b>'+sign(connection)+'</b></div></div>';
 }
 function finish(){
@@ -182,10 +184,11 @@ function finish(){
  saved.best=previous||saved.best||null;
  store();
  renderStats(finalState);renderJournal(finalState);
- $("stage").classList.remove("moving","forking");
+ $("stage").classList.remove("moving","forking");$("stage").classList.add("endstage");
  $("travel").classList.add("hidden");$("fork").classList.add("hidden");$("ending").classList.remove("hidden");
  $("phaseLabel").textContent="この人生の終点";
  $("endingTitle").textContent=ending.title;
+ document.querySelector(".ending-eyebrow").textContent="LIFE "+String(parseInt(path,2)+1).padStart(4,"0")+" / 1024";
  $("endingText").textContent=finalState.age+"歳。"+ending.text;
  $("latest").textContent="10回の選択から、一つの人生ができました。別の道を試すこともできます。";
  $("compare").innerHTML=compareHtml(ending,previous||saved.best);
@@ -199,7 +202,7 @@ function schedule(){
   beatIndex++;
   if(beatIndex<pending.beats.length){renderBeat(beatIndex);schedule();}
   else if(path.length===10)finish();else renderFork();
- },fast?300:Math.min(3200,1500+(pending.beats[beatIndex]?.text.length||0)*18));
+ },fast?500:Math.min(14000,2800+(pending.beats[beatIndex]?.text.length||0)*65));
 }
 function travelToNext(){
  if(timer){clearTimeout(timer);timer=null;}

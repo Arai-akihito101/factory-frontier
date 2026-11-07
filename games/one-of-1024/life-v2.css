@@ -119,3 +119,16 @@ dialog::backdrop{background:#18362b8a}dialog h2{font-family:var(--serif);font-si
  .brand-mark{font-size:22px}
  .brand-detail{display:none}
 }
+
+/* Story 3: long scenes flow normally, including on narrow phones. */
+.stage.forking,.stage.endstage{height:auto;min-height:630px;max-height:none}
+.fork{position:relative;inset:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:90px 20px 75px}
+.fork-head{position:static;grid-column:1/-1;grid-row:1;font-size:20px}
+.fork-question{position:static;grid-column:1/-1;grid-row:2;white-space:pre-line;text-align:left;font-size:14px;line-height:1.9;padding:18px}
+.fork-card,.fork-card.left,.fork-card.right{position:static;grid-row:3;width:100%;min-height:190px}
+.fork-desc{font-size:12px;color:#536457;display:block}
+.ending{position:relative;inset:auto;margin:90px 20px 75px}
+.ending p{white-space:pre-line;text-align:left;font-size:14px}
+.travel{max-height:72%;overflow:auto;top:18%}
+.chapter p{white-space:pre-line}
+@media(max-width:600px){.fork{padding:75px 10px 60px;gap:12px}.fork-head{font-size:17px}.fork-question{font-size:13px;padding:13px}.fork-card,.fork-card.left,.fork-card.right{padding:12px 10px}.fork-desc{font-size:11px}.ending{margin:75px 10px 60px}.ending p{font-size:13px}}
