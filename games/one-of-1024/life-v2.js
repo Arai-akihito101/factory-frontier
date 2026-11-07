@@ -17,7 +17,7 @@ function store(){
  try{localStorage.setItem(key,JSON.stringify(saved));}catch(_){}
 }
 function start(){
- return {age:5,place:"港町",home:"親と暮らす",job:"小学校入学前",income:0,savings:0,debt:0,bond:62,joy:65,health:91,
+ return {age:5,place:"港町",home:"親と暮らす",job:"小学校入学前",income:0,savings:0,debt:0,bond:57,joy:60,health:91,
     knowledge:26,freedom:30,style:"",movedEarly:false,college:false,partner:false,children:0,retired:false,
     ambitious:false,settled:false,pace:"",care:"",finalWay:"",path:"",story:[],choices:[],happenings:[]};
 }
@@ -44,6 +44,11 @@ function earnBetween(s,age){
    const earned=Math.round(((s.income*.77)-cost)*years*.62);
    const interest=Math.round(s.debt*.018*years);
    s.savings+=earned-interest;
+   // Well-being is not a score that always rises. Financial strain, ageing and
+   // fraying relationships can erode it during the years between choices.
+   s.joy-=Math.round(years*(s.debt>700?.85:s.debt>250?.56:.34));
+   s.bond-=Math.round(years*(s.place==="大都市"?.35:.2));
+   if(s.income>0 && s.income<cost*.9)s.joy-=Math.round(years*.5);
    if(s.age>=65)s.health-=Math.round(years*.38);else if(s.age>=46)s.health-=Math.round(years*.20);
  }
  s.age=age;tidy(s);
