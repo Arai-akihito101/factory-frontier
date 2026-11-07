@@ -124,10 +124,10 @@ function sceneFor(prefix,s){
    const a=t.q6[parseInt(prefix.slice(3,5),2)];
    return D.N(a[0],a[1],consequences(a[2],0,s),consequences(a[3],1,s));
  }
- const stage=depth-6,arc=D.late[prefix.slice(0,3)][stage];
+ const stage=depth-6,track=prefix.slice(0,3),lastBit=Number(prefix[depth-1]),arc=lastBit===1?D.lateAlt[track][stage]:D.late[track][stage];
  const last=s.history[s.history.length-1],first=s.history[0];
- const memory=(last?" 前回『"+last.choice+"』を決めた。その結果、"+last.result+" ":"")+
- (stage===0&&first?"9歳の日に『"+first.choice+"』と決めたことから続く人生だ。":"");
+ const memory=(last?" 前回は『"+last.choice+"』を選び、"+last.result.split("。")[0]+"。":"")+
+ (stage===0&&first?" あの9歳の日、『"+first.choice+"』と決めたことから、この人生は始まった。":"");
  const burden=s.debt>400?" 借入は"+s.debt+"万円にのぼり、次の決断も自由ではない。":"";
  return D.N(arc.title,arc.story+memory+burden,arc.options[0],arc.options[1]);
 }
@@ -159,11 +159,13 @@ function choose(bit){
  if(path.length>=10)return;
  const prefix=path,old=evaluate(path),scene=sceneFor(path,old),option=scene.options[bit];
  path+=String(bit);store.edges[prefix+bit]=true;store.totalChoices=(store.totalChoices||0)+1;
- toast=option.result;
  const after=evaluate(path);
+ toast=option.result+"　"+after.age+"歳の現在： "+after.job+"／"+after.city+"。貯金 "+fmt(after.wealth)+"万円、借入 "+fmt(after.debt)+"万円。";
  if(path.length===10)recordEnd(after);
+ const oldTop=$("scene").getBoundingClientRect().top;
  save();render();
- 
+ const shift=$("scene").getBoundingClientRect().top-oldTop;
+ if(Math.abs(shift)>1&&window.scrollBy)window.scrollBy(0,shift);
 }
 function replay(prefix){
  if(!/^[01]{0,9}$/.test(prefix))return;
@@ -271,8 +273,8 @@ document.body.addEventListener("click",e=>{const el=e.target.closest("[data-rewi
 document.addEventListener("keydown",e=>{if($("gameContent").classList.contains("hidden"))return;if(e.target.tagName==="INPUT"||e.altKey||e.metaKey||e.ctrlKey)return;if(e.key==="1"||e.key.toLowerCase()==="a")choose(0);if(e.key==="2"||e.key.toLowerCase()==="b")choose(1);});
 $("help").addEventListener("click",()=>{$("helpDialog").showModal();});
 $("helpClose").addEventListener("click",()=>$("helpDialog").close());
-$("welcome").classList.remove("hidden");
-$("gameContent").classList.add("hidden");
+$("welcome").classList.add("hidden");
+$("gameContent").classList.remove("hidden");
 render();
 /* Developer-test API: deterministic 2^10 leaves, one distinct binary prefix per situation. */
 window.LIFE_TEST={evaluate,sceneFor,initial,statDefs,ages:D.ages,branchCount:depth=>2**depth,choiceCount:depth=>2**depth};
