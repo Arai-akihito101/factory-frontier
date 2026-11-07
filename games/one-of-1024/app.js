@@ -166,6 +166,7 @@ function choose(bit){
  save();render();
  const shift=$("scene").getBoundingClientRect().top-oldTop;
  if(Math.abs(shift)>1&&window.scrollBy)window.scrollBy(0,shift);
+ const road=$("scene");road.classList.remove("road-advance");void road.offsetWidth;road.classList.add("road-advance");
 }
 function replay(prefix){
  if(!/^[01]{0,9}$/.test(prefix))return;
@@ -270,7 +271,7 @@ $("reset").addEventListener("click",()=>{replayStart();$("welcome").classList.ad
 $("playAgain").addEventListener("click",()=>{replayStart();$("story").scrollIntoView({behavior:"smooth",block:"start"});});
 $("compareBtn").addEventListener("click",()=>{$("history").scrollIntoView({behavior:"smooth"});});
 document.body.addEventListener("click",e=>{const el=e.target.closest("[data-rewind]");if(el){const prefix=el.getAttribute("data-rewind");replay(prefix);$("welcome").classList.add("hidden");$("gameContent").classList.remove("hidden");}});
-document.addEventListener("keydown",e=>{if($("gameContent").classList.contains("hidden"))return;if(e.target.tagName==="INPUT"||e.altKey||e.metaKey||e.ctrlKey)return;if(e.key==="1"||e.key.toLowerCase()==="a")choose(0);if(e.key==="2"||e.key.toLowerCase()==="b")choose(1);});
+document.addEventListener("keydown",e=>{if($("gameContent").classList.contains("hidden"))return;if($("helpDialog").open)return;if(e.target.tagName==="INPUT"||e.altKey||e.metaKey||e.ctrlKey)return;if(e.key==="1"||e.key.toLowerCase()==="a")choose(0);if(e.key==="2"||e.key.toLowerCase()==="b")choose(1);});
 $("help").addEventListener("click",()=>{$("helpDialog").showModal();});
 $("helpClose").addEventListener("click",()=>$("helpDialog").close());
 $("welcome").classList.add("hidden");
