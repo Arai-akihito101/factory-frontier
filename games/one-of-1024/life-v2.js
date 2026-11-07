@@ -199,7 +199,7 @@ function schedule(){
   beatIndex++;
   if(beatIndex<pending.beats.length){renderBeat(beatIndex);schedule();}
   else if(path.length===10)finish();else renderFork();
- },fast?350:1100);
+ },fast?300:Math.min(3200,1500+(pending.beats[beatIndex]?.text.length||0)*18));
 }
 function travelToNext(){
  if(timer){clearTimeout(timer);timer=null;}
