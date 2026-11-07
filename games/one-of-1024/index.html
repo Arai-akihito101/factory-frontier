@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f3efe4">
 <meta name="description" content="LIFE 1024 — 5歳から人生が自動で進み、10回の分かれ道から1,024通りの未来が生まれる無料の人生シミュレーション。ログイン不要。">
 <title>LIFE 1024｜人生シミュレーション</title>
-<link rel="stylesheet" href="./life-v2.css?v=3.0">
+<link rel="stylesheet" href="./life-v2.css?v=3.1">
 </head>
 <body>
 <div class="app">
@@ -22,18 +22,17 @@
  <div class="play-top"><div><span class="eyebrow">ONE LIFE / INFINITE WHAT-IFS</span><h1>LIFE 1024。<em>どんな人生が待っている？</em></h1></div><span class="count" id="count">01 / 10</span></div>
  <div class="stage" id="stage" data-world="coast">
   <div class="sky"><div class="sun"></div><div class="mountains"></div><div class="mountains hills"></div><div class="town"></div></div>
-  <svg class="road" viewBox="0 0 900 630" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="roadFill" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#d6b98e"/><stop offset="1" stop-color="#f0d9b7"/></linearGradient></defs>
-    <path class="land" d="M0 395 Q190 351 420 377 T900 366 L900 630 L0 630Z"/>
-    <path class="road-shadow" d="M385 630 Q422 499 435 419 L441 365 Q360 292 246 261 L212 222 L244 206 Q402 262 458 341 Q521 260 644 210 L687 223 L652 271 Q533 317 479 366 L481 419 Q494 512 533 630Z"/>
-    <path class="road-main" d="M410 630 Q435 501 448 418 L450 370 Q380 302 243 257 L224 224 L241 216 Q401 268 458 350 Q526 273 651 219 L675 230 L650 262 Q518 316 472 369 L476 418 Q490 518 519 630Z"/>
-    <path class="road-mark" d="M466 628 Q466 534 463 424 L461 365"/>
-    <path id="routeLeft" class="road-fork" d="M460 361 Q382 291 227 230"/>
-    <path id="routeRight" class="road-fork" d="M460 361 Q548 287 663 235"/>
-    <path class="road-edge" d="M410 630 Q435 501 448 418 L450 370 Q380 302 224 224"/>
-    <path class="road-edge" d="M519 630 Q490 518 476 418 L472 369 Q518 316 675 230"/>
-    <circle class="road-dot" cx="463" cy="445" r="7"/>
-  </svg>
+<div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
+  <svg class="walker-road" viewBox="0 0 600 220" aria-hidden="true">
+    <path d="M300 236 L300 145 Q255 103 120 67 M300 145 Q345 103 480 67" fill="none" stroke="#9b9275" stroke-width="52"/>
+    <path d="M300 236 L300 145 Q255 103 120 67 M300 145 Q345 103 480 67" fill="none" stroke="#e4cca3" stroke-width="46"/>
+    <path d="M300 230 L300 148" fill="none" stroke="#fff3ce" stroke-width="2" stroke-dasharray="7 12"/>
+    <path id="routeLeft" class="road-fork" d="M300 145 Q255 103 120 67"/>
+    <path id="routeRight" class="road-fork" d="M300 145 Q345 103 480 67"/>
+    <g fill="#859875" opacity=".8"><rect x="75" y="138" width="5" height="14"/><rect x="67" y="145" width="20" height="4"/><rect x="490" y="156" width="5" height="12"/><rect x="482" y="161" width="20" height="4"/></g>
+    <g id="walkerPawn" transform="translate(300 205)"><ellipse cy="1" rx="23" ry="6" fill="#3b4e42" opacity=".22"/><g id="walkerPixels" transform="translate(-25 -78) scale(2.2)" shape-rendering="crispEdges"></g></g>
+  </svg><span class="avatar-caption" id="avatarCaption">あなた · 5歳</span>
+ </div>
   <div class="stage-info"><div class="stage-date"><span id="age">5</span><small>歳</small></div><div class="stage-place"><strong id="place">小さな港町</strong><span id="phaseLabel">人生が始まる</span></div></div>
   <div id="travel" class="travel">
     <div class="travel-kicker" id="travelKicker">5歳 — あの日のこと</div>
@@ -50,7 +49,7 @@
   <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
   <div class="road-footer" id="roadFooter">5歳のある日。人生はまだ、どこへでも続いている。</div>
  </div>
- <div class="understage"><div class="understory"><div class="under-kicker">いま起きたこと</div><p id="latest">時間が進むと、人生にいろいろなことが起きます。</p></div><div class="play-control"><button class="speed-btn" id="speed" type="button"><span id="speedSymbol">◷</span><span id="speedLabel">通常の速度</span></button><button class="sound-free" id="restart" type="button">↺ 最初から</button></div></div>
+ <div class="understage"><div class="understory"><div class="under-kicker">いま起きたこと</div><p id="latest">時間が進むと、人生にいろいろなことが起きます。</p></div><div class="play-control"><button id="pause" class="speed-btn" type="button" aria-pressed="false">一時停止</button><button class="speed-btn" id="speed" type="button"><span id="speedSymbol">◷</span><span id="speedLabel">通常の速度</span></button><button class="sound-free" id="restart" type="button">↺ 最初から</button></div></div>
 </section>
 <aside class="sidebar">
   <section class="panel current"><div class="panel-kicker">THIS LIFE, RIGHT NOW</div><div class="panel-title"><h2>いまの人生</h2><span class="panel-age" id="sideAge">5歳</span></div>
@@ -75,10 +74,11 @@
   <section class="panel collection"><div class="panel-kicker">WHAT COULD HAVE BEEN</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
 </aside>
 </main>
-<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 3.0</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 3.1</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
 </div>
-<dialog id="helpDialog"><h2>遊び方</h2><p>人生は子ども時代から自動で進みます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の分かれ道へ」で時間経過を省略できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
+<dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の分かれ道へ」で時間経過を省略できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
 <script src="./life-v2-data.js?v=2.1"></script>
-<script src="./life-v3-stories.js?v=3.0"></script>
-<script src="./life-v2.js?v=3.0"></script>
+<script src="./life-v3-stories.js?v=3.1"></script>
+<script src="./life-avatar.js?v=3.1"></script>
+<script src="./life-v2.js?v=3.1"></script>
 </body></html>

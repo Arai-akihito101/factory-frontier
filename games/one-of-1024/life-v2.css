@@ -132,3 +132,18 @@ dialog::backdrop{background:#18362b8a}dialog h2{font-family:var(--serif);font-si
 .travel{max-height:72%;overflow:auto;top:18%}
 .chapter p{white-space:pre-line}
 @media(max-width:600px){.fork{padding:75px 10px 60px;gap:12px}.fork-head{font-size:17px}.fork-question{font-size:13px;padding:13px}.fork-card,.fork-card.left,.fork-card.right{padding:12px 10px}.fork-desc{font-size:11px}.ending{margin:75px 10px 60px}.ending p{font-size:13px}}
+
+/* 3.1: an unobstructed pixel-character lane precedes every scene. */
+.stage,.stage.forking,.stage.endstage{height:auto;min-height:610px;max-height:none;background:linear-gradient(#bad4cb 0px,#e4dec1 290px,#e9e5d4 420px)}
+.stage .sky{height:295px;bottom:auto}.stage .sun{top:12%;width:70px;height:70px;left:70%}
+.walker-scene{position:relative;z-index:6;height:295px;padding-top:65px;overflow:hidden;pointer-events:none}
+.walker-road{display:block;width:100%;height:220px;max-width:700px;margin:auto}
+.avatar-caption{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);padding:5px 12px;background:#fff9e8e8;border:1px solid #e9dfc4;border-radius:20px;color:#40594d;font-size:11px;white-space:nowrap}
+#walkerPixels{image-rendering:pixelated}
+.travel{position:relative;top:auto;left:auto;transform:none;width:auto;min-width:0;max-height:none;margin:5px 24px 75px;text-align:left}
+.travel h2{font-size:24px}.travel p{font-size:14px;line-height:2;white-space:pre-line}
+.fork{padding-top:8px}.ending{margin-top:8px}.fork-question{margin:0}
+.stage.walking .fork-card{pointer-events:none;opacity:.65}.stage.walking .road-fork.chosen{stroke:#c17855}
+.stage.paused .travel-pulse i{animation-play-state:paused}
+.play-control{flex-wrap:wrap}.play-control #pause[aria-pressed="true"]{background:#e1eadf;color:#365943}
+@media(max-width:600px){.walker-scene{height:265px;padding-top:54px}.walker-road{height:201px;width:112%;max-width:none;margin-left:-6%}.travel{margin:4px 10px 58px;padding:17px}.travel h2{font-size:20px}.travel p{font-size:13px}.fork{padding-top:8px}.stage-info{z-index:7}.avatar-caption{font-size:10px}}

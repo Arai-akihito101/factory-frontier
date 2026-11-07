@@ -8,7 +8,7 @@ const defaultSaved=()=>({current:"",found:{},last:null,best:null,plays:0,visited
 let saved=defaultSaved();
 try{const v=JSON.parse(localStorage.getItem(key)||"null");if(v&&typeof v==="object")saved=Object.assign(defaultSaved(),v);}catch(_){}
 let path=typeof saved.current==="string"&&/^[01]{0,10}$/.test(saved.current)?saved.current:"";
-let phase="travel",pending=null,beatIndex=0,timer=null,fast=false,fromChoice=null;
+let phase="travel",pending=null,beatIndex=0,timer=null,fast=false,paused=false,transitionEpoch=0,fromChoice=null;
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const int=x=>Math.round(x).toLocaleString("ja-JP");
 const bound=(n,min=0,max=100)=>Math.max(min,Math.min(max,Math.round(n)));
@@ -56,6 +56,7 @@ function earnBetween(s,age){
 function appendBeat(s,b,stage){
  earnBetween(s,b.age);
  alter(s,b.effects,b.fields);
+ if(b.recap)return; // Display a chosen outcome once without duplicating the journal.
  const record={age:s.age,title:b.title,text:b.text,type:"beat",place:s.place,job:s.job,savings:s.savings,bond:s.bond,joy:s.joy};
  s.story.push(record);s.happenings.push(record);
 }
@@ -118,8 +119,8 @@ function renderStats(s){
  const world=s.place==="大都市"?"city":s.place==="港町"?"coast":s.place==="地方都市"?"town":"rural";
  $("stage").dataset.world=world;
  const taken=path.slice(-1);
- $("routeLeft").classList.toggle("chosen",taken==="0");
- $("routeRight").classList.toggle("chosen",taken==="1");
+ $("routeLeft").classList.remove("chosen");
+ $("routeRight").classList.remove("chosen");
 }
 function renderJournal(s){
  const opened=Object.keys(saved.found||{}).length;
@@ -152,6 +153,7 @@ function renderBeat(index){
  $("stage").classList.remove("forking");
  $("fork").classList.add("hidden");$("ending").classList.add("hidden");$("travel").classList.remove("hidden");
  phase="travel";
+ if(window.LIFE_AVATAR){window.LIFE_AVATAR.show(s,"walk",beatDuration(b));if(paused)window.LIFE_AVATAR.pause();}
 }
 function renderFork(){
  if(!pending||pending.stage>=10){finish();return;}
@@ -163,8 +165,10 @@ function renderFork(){
  $("forkHead").textContent=s.age+"歳 — "+node.title;
  $("forkQuestion").textContent=node.story;
  for(let i=0;i<2;i++){$("choiceTitle"+i).textContent=node.options[i].title;$("choiceSub"+i).textContent=node.options[i].desc;}
- $("latest").textContent=s.age+"歳。"+node.story;
+ $("latest").textContent=s.age+"歳。「"+node.title+"」。これまでの暮らしを踏まえて、次の道を選びます。";
  phase="choice";
+ $("choice0").disabled=false;$("choice1").disabled=false;
+ window.LIFE_AVATAR?.show(s,"idle");
 }
 function compareHtml(a,b){
  if(!a||!b)return "二つの人生を終えると、違いを比べられます。";
@@ -183,7 +187,7 @@ function finish(){
  saved.plays=(saved.plays||0)+1;
  saved.best=previous||saved.best||null;
  store();
- renderStats(finalState);renderJournal(finalState);
+ renderStats(finalState);renderJournal(finalState);window.LIFE_AVATAR?.show(finalState,"idle");
  $("stage").classList.remove("moving","forking");$("stage").classList.add("endstage");
  $("travel").classList.add("hidden");$("fork").classList.add("hidden");$("ending").classList.remove("hidden");
  $("phaseLabel").textContent="この人生の終点";
@@ -194,15 +198,17 @@ function finish(){
  $("compare").innerHTML=compareHtml(ending,previous||saved.best);
  $("compareBtn").classList.toggle("hidden",!(previous||saved.best));
 }
+function beatDuration(b){return fast?650:Math.min(14000,2800+(b?.text.length||0)*65);}
 function schedule(){
  if(timer)clearTimeout(timer);
+ if(paused){timer=null;return;}
  timer=setTimeout(()=>{
   timer=null;
   if(phase!=="travel")return;
   beatIndex++;
   if(beatIndex<pending.beats.length){renderBeat(beatIndex);schedule();}
   else if(path.length===10)finish();else renderFork();
- },fast?500:Math.min(14000,2800+(pending.beats[beatIndex]?.text.length||0)*65));
+ },beatDuration(pending.beats[beatIndex]));
 }
 function travelToNext(){
  if(timer){clearTimeout(timer);timer=null;}
@@ -211,16 +217,23 @@ function travelToNext(){
  if(!pending.beats.length){path.length===10?finish():renderFork();return;}
  renderBeat(0);schedule();
 }
-function select(bit){
+async function select(bit){
  if(phase!=="choice"||path.length>=10)return;
  const s=pending.ready,node=pending.node,option=node.options[bit];
  path+=String(bit);
  saved.visited[path]=true;store();
  fromChoice=option;
+ phase="walking";const epoch=++transitionEpoch;
+ $("choice0").disabled=true;$("choice1").disabled=true;$("stage").classList.add("walking");
+ $("routeLeft").classList.toggle("chosen",bit===0);$("routeRight").classList.toggle("chosen",bit===1);
+ await window.LIFE_AVATAR?.depart(bit,fast);
+ if(epoch!==transitionEpoch)return;
+ $("stage").classList.remove("walking");
  $("latest").textContent=s.age+"歳に「"+option.title+"」を選んだ。"+option.consequence;
  travelToNext();
 }
 function restart(prefix=""){
+ ++transitionEpoch;window.LIFE_AVATAR?.cancel();$("stage").classList.remove("walking");
  if(timer){clearTimeout(timer);timer=null;}
  if(!/^[01]{0,9}$/.test(prefix))prefix="";
  path=prefix;store();travelToNext();
@@ -232,6 +245,11 @@ function rewind(prefix){
 $("choice0").addEventListener("click",()=>select(0));
 $("choice1").addEventListener("click",()=>select(1));
 $("skip").addEventListener("click",()=>{if(phase!=="travel")return;if(timer)clearTimeout(timer);timer=null;beatIndex=pending.beats.length;if(path.length===10)finish();else renderFork();});
+$("pause").addEventListener("click",()=>{
+ paused=!paused;$("pause").textContent=paused?"再生する":"一時停止";$("pause").setAttribute("aria-pressed",String(paused));$("stage").classList.toggle("paused",paused);
+ if(paused){if(timer)clearTimeout(timer);timer=null;if(phase!=="walking")window.LIFE_AVATAR?.pause();}
+ else {window.LIFE_AVATAR?.resume();if(phase==="travel")schedule();}
+});
 $("speed").addEventListener("click",()=>{
  fast=!fast;$("speedLabel").textContent=fast?"早送り中":"通常の速度";$("speedSymbol").textContent=fast?"»":"◷";
  if(timer&&phase==="travel")schedule();

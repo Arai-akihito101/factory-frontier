@@ -11,7 +11,7 @@ for(let n=0;n<1024;n++){
  for(const k of ['savings','debt','income','joy','bond','health'])assert.ok(Number.isFinite(s[k]));
  for(const h of s.choices.slice(3))assert.ok(e.text.includes(h.text));
  endings.add(e.text);arcs[s.arc]=(arcs[s.arc]||0)+1;
- for(let d=0;d<10;d++){const prefix=p.slice(0,d);if(nodes.has(prefix))continue;const u=T.upcoming(prefix);assert.equal(u.node.options.length,2);nodes.set(prefix,JSON.stringify(u.node));assert.equal(JSON.stringify(T.upcoming(prefix)),JSON.stringify(u));}
+ for(let d=0;d<10;d++){const prefix=p.slice(0,d);if(nodes.has(prefix))continue;const u=T.upcoming(prefix);assert.equal(u.node.options.length,2);if(d>=3)for(const o of u.node.options)assert.notEqual(o.desc,o.consequence,"choice reveals entire result");nodes.set(prefix,JSON.stringify(u.node));assert.equal(JSON.stringify(T.upcoming(prefix)),JSON.stringify(u));}
 }
 assert.equal(endings.size,1024);assert.equal(nodes.size,1023);
 console.log(JSON.stringify({endings:endings.size,nodes:nodes.size,distinctDecisionPresentations:new Set(nodes.values()).size,arcs,checks:'10 choices; all branches reachable; deterministic replay; chronological ages; finite state; seven adult consequences retained'},null,2));

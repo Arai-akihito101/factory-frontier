@@ -21,3 +21,26 @@ Validation: `node tests/life-1024-model.cjs` exhaustively checks all leaves and
 ages, finite numeric state, retention of consequences and 1,024 distinct ending
 texts. `node tests/life-1024.cjs` adds browser interaction checks when Playwright
 Chromium is available. It requires a local static server on port 8765 or LIFE_URL.
+
+
+## Story 3.1 — walking protagonist and narrative revision
+
+`life-avatar.js` draws an integer-grid SVG sprite with four walking frames. A
+separate lane keeps the character visible above the story. Childhood, school,
+university, eight working outfits and retirement alter clothing and props;
+age changes stature, hair and stride. A cane is used only for an older character
+with reduced health. Choosing A/B follows the corresponding road. Rewind/restart
+cancels in-flight movement; reduced-motion preference skips animation. Pause
+stops auto-advance and the walking loop.
+
+Choice previews now describe intentions and stakes rather than revealing results.
+48 profession-specific everyday scenes replace repeated generic filler. Renting
+a kitchen, operating versus working on a ship, moving from a hotel to a small inn,
+and opening a workshop after manufacturer employment have explicit continuity.
+Only context relevant to the current decision is repeated in the prompt; all
+choices and consequences still persist in the journal and ending. Replayed choice
+outcomes are displayed without duplicating the journal. School status updates
+with age. Story 3.0 route saves remain usable.
+
+`tests/life-avatar.cjs` checks eight distinct outfits, six age appearances,
+left/right movement, pause, restart during movement and responsive layout.
