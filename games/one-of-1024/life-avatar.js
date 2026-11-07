@@ -5,6 +5,7 @@ const $=id=>document.getElementById(id),pawn=$('walkerPawn'),body=$('walkerPixel
 if(!pawn||!body)return;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const uniforms=[['#323d52','#c1bba7','舞台制作'],['#d4ad73','#fff2d3','パン職人'],['#af6551','#ebd9b5','教員'],['#345b78','#ecede2','船員'],['#6d7960','#d1b890','映像制作者'],['#477e94','#b7bcb0','修理職人'],['#739079','#e6d9b7','河川調査員'],['#ac7966','#f0dfba','宿の仕事']];
+let scrollDistance=0,scrollBase=0;
 let state=null,mode='idle',frameId=0,lastKey='',started=0,duration=6000,departure=null,pausedAt=null;
 function appearance(s){
  const age=s.age,child=age<12,teen=age>=12&&age<18,student=age>=18&&age<24&&s.college;
@@ -108,31 +109,31 @@ function sprite(s,frame=0,direction='front'){
  if(a.cane){r(19,ty+16,3,1,'#8b7651');r(21,ty+17,1,7,'#8b7651');}
  return out.join('');
 }
-function walkingSign(){return state?.path?.endsWith('0')?-1:1;}
 function draw(frame,x,y){
  if(!state)return;
  const direction=mode==='walk'||departure?'side':'front';
  const key=[state.age,state.arc,state.college,state.retired,state.health<50,frame,direction].join('/');
  if(key!==lastKey){body.innerHTML=sprite(state,frame,direction);lastKey=key;}
- const scale=2,flip=departure?(departure.bit===0?-1:1):mode==='walk'?walkingSign():1;
+ const scale=2,flip=1;
  body.setAttribute('transform',`translate(${-14*scale*flip} ${-(state.age<12?25:state.age<18?24:23)*scale}) scale(${scale*flip} ${scale})`);
  pawn.setAttribute('transform',`translate(${Math.round(x/2)*2} ${y})`);
 }
 function updateCaption(){const a=appearance(state);$('avatarCaption').textContent=`あなた · ${state.age}歳 · ${a.role}`;$('walkerScene').setAttribute('aria-label',`${state.age}歳の主人公、${a.role}。${mode==='walk'||mode==='depart'?'道を歩いています。':'道の上に立っています。'}`);$('walkerScene').dataset.age=state.age;$('walkerScene').dataset.role=a.role;}
+function moveWorld(distance){scrollDistance=distance;$('pixelLandscape').setAttribute('transform',`translate(${-Math.floor((distance%600)/2)*2} 0)`);}
 function tick(now){
  frameId=0;if(!state)return;
  const elapsed=now-started,walking=mode==='walk'||mode==='depart';
  const frame=walking&&!reduced.matches?Math.floor(now/(state.age>=67?200:130))%4:0;
  if(departure){
-  const t=reduced.matches?1:Math.min(1,elapsed/departure.duration),e=t*t*(3-2*t),sign=departure.bit?1:-1;
-  draw(frame,300+sign*100*e,218);
+  const t=reduced.matches?1:Math.min(1,elapsed/departure.duration),e=t*t*(3-2*t);
+  moveWorld(scrollBase+60*e);draw(frame,300,218);
   if(t===1){const done=departure.resolve;departure=null;mode='idle';done();return;}
- }else{draw(frame,mode==='walk'?300-walkingSign()*90*(1-Math.min(1,elapsed/duration)):300,218);}
+ }else{if(mode==='walk')moveWorld(scrollBase+Math.min(elapsed,duration)*.016);draw(frame,300,218);}
  if(walking&&!reduced.matches)frameId=requestAnimationFrame(tick);
 }
 function cancel(){if(frameId)cancelAnimationFrame(frameId);frameId=0;if(departure){const done=departure.resolve;departure=null;done();}}
-function show(s,nextMode='idle',ms=6000){cancel();state={...s};mode=nextMode;pausedAt=null;duration=ms;started=performance.now();updateCaption();tick(started);}
-function depart(bit,fast=false){cancel();pausedAt=null;mode='depart';started=performance.now();updateCaption();return new Promise(resolve=>{departure={bit,resolve,duration:fast?450:1050};tick(started);});}
+function show(s,nextMode='idle',ms=6000){cancel();state={...s};mode=nextMode;pausedAt=null;duration=ms;scrollBase=scrollDistance;started=performance.now();updateCaption();tick(started);}
+function depart(bit,fast=false){cancel();pausedAt=null;mode='depart';scrollBase=scrollDistance;started=performance.now();updateCaption();return new Promise(resolve=>{departure={bit,resolve,duration:fast?450:1050};tick(started);});}
 function pause(){if(pausedAt===null)pausedAt=performance.now();if(frameId)cancelAnimationFrame(frameId);frameId=0;}
 function resume(){if(pausedAt!==null){started+=performance.now()-pausedAt;pausedAt=null;}if(!frameId&&(mode==='walk'||mode==='depart'))frameId=requestAnimationFrame(tick);}
 reduced.addEventListener('change',()=>{if(state){pause();tick(performance.now());}});

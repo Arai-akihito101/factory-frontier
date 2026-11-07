@@ -135,7 +135,7 @@ function renderStats(s){
  const world=s.place==="大都市"?"city":s.place==="港町"?"coast":s.place==="地方都市"?"town":"rural";
  $("stage").dataset.world=world;
  const taken=path.slice(-1);
- $("routeHint").textContent=s.age<18?"小さな世界が、広がっていく。":s.retired?"次の時間も、自分の歩幅で。":C.arcs?.[s.arc]?.title||"まだ、どこへでも行ける。";
+ $("routeHint").textContent=s.choices?.length?"選んだ道："+s.choices[s.choices.length-1].title:s.age<18?"小さな世界が、広がっていく。":s.retired?"次の時間も、自分の歩幅で。":C.arcs?.[s.arc]?.title||"まだ、どこへでも行ける。";
  $("routeLeft").classList.remove("chosen");
  $("routeRight").classList.remove("chosen");
 }
@@ -247,6 +247,7 @@ async function select(bit){
  path+=String(bit);
  saved.visited[path]=true;store();
  fromChoice=option;
+ $("routeHint").textContent="この先へ："+option.title;
  phase="walking";const epoch=++transitionEpoch;
  $("choice0").disabled=true;$("choice1").disabled=true;$("stage").classList.add("walking");
  $("routeLeft").classList.toggle("chosen",bit===0);$("routeRight").classList.toggle("chosen",bit===1);

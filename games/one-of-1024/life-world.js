@@ -23,7 +23,7 @@ function house(x,arc){
 }
 let key='';
 function render(s){
- const season=Math.floor(s.age/7)%4,world=s.place==='大都市'?'city':s.place==='港町'?'coast':'town',next=[s.arc,season,world].join('/');if(key===next)return;key=next;
+ const season=Math.floor(s.age/7)%4,world=s.place==='大都市'?'city':s.place==='港町'?'coast':'town',next=[s.arc,season,world,s.age,s.path].join('/');if(key===next)return;key=next;
  $('walkerScene').dataset.season=season;$('walkerScene').dataset.world=world;
  const sky=['#d5e5df','#c5e0df','#e7ddc3','#dae4e3'][season],grass=['#a8bc8c','#9db584','#c4b386','#b5c5b4'][season];
  let h=R(0,0,300,130,sky)+R(239,12,13,13,'#f6e5b3');
@@ -32,7 +32,11 @@ function render(s){
  if(world==='city'){for(let i=0;i<5;i++){let x=90+i*20,y=32+(i%3)*7;h+=R(x,y,16,36,'#a2b8b2');for(let j=0;j<3;j++)h+=R(x+3,y+5+j*8,3,4,'#d6e1ce')+R(x+10,y+5+j*8,3,4,'#d6e1ce');}}
  h+=R(0,66,300,28,grass);
  if(world==='coast')h+=R(0,62,88,21,'#80aaa9')+R(5,68,22,1,'#c7dbcb')+R(36,75,35,1,'#c7dbcb');
- h+=house(207,s.arc)+house(-26,null)+tree(69,39,season);
+ const variant=(parseInt(s.path||'0',2)+Math.floor(s.age/3))%3;
+ if(variant===0)h+=house(207,s.arc)+house(-26,null)+tree(69,39,season);
+ if(variant===1)h+=house(28,s.arc)+tree(225,39,season)+tree(265,45,season);
+ if(variant===2)h+=house(207,s.arc)+tree(14,42,season)+tree(60,39,season);
+
  // A park bench and fence stand on the grass, never in the walking lane.
  h+=R(124,75,26,3,'#9c7857')+R(124,80,26,3,'#b38d62')+R(123,85,28,3,'#927253')+R(126,88,2,5,'#59695a')+R(147,88,2,5,'#59695a');
  for(let x=164;x<198;x+=8)h+=R(x,78,2,15,'#eee1be');h+=R(164,81,34,2,'#e8d9b5')+R(164,87,34,2,'#e8d9b5');
@@ -40,7 +44,7 @@ function render(s){
  for(let x=0;x<300;x+=24)h+=R(x,98,1,3,'#bbb298');
  for(let i=0;i<20;i++){const x=(i*43+7)%300;h+=R(x,124+(i%3),3,1,'#83996c');if(i%4===0)h+=R(x,123,1,2,'#e9d6a0');}
  h+=R(181,53,2,40,'#5b6c60')+R(177,51,10,2,'#5b6c60')+R(178,44,8,7,'#5b6c60')+R(180,45,4,5,'#f4dfaa')+R(180,42,4,2,'#5b6c60');
- $('pixelLandscape').innerHTML='<g transform="scale(2)">'+h+'</g>';
+ $('pixelLandscape').innerHTML='<g transform="scale(2)">'+h+'</g><g transform="translate(600 0) scale(2)">'+h+'</g>';
  $('seasonLabel').textContent=['春の気配','夏の光','秋の風','冬の空'][season];
 }
 window.LIFE_WORLD={render};
