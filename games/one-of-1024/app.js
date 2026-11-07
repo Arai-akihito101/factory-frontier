@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 const D=window.LIFE_DATA, $=id=>document.getElementById(id);
-const STORAGE="one-of-1024-v1", totalEdges=2046;
+const STORAGE="one-of-1024-v11", totalEdges=2046;
 let store={edges:{},endings:{},previous:null,current:"",totalChoices:0};
 try{const raw=localStorage.getItem(STORAGE);if(raw){const v=JSON.parse(raw);if(v&&typeof v==="object")store=Object.assign(store,v);}}catch(_){}
 let path=/^[01]{0,10}$/.test(store.current||"")?store.current:"";
@@ -12,20 +12,21 @@ const fmt=n=>(n<0?"−":"")+Math.abs(Math.round(n)).toLocaleString("ja-JP");
 const signed=n=>(n>0?"+":"")+Math.round(n).toLocaleString("ja-JP");
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function save(){try{store.current=path;localStorage.setItem(STORAGE,JSON.stringify(store));}catch(_){}}
-function initial(){return {age:18,wealth:80,debt:0,skill:16,bond:52,health:84,freedom:42,pressure:16,reputation:14,
-  job:"高校卒業",city:"潮見町",mentor:"幼なじみの遥",income:180,world:"出発点",project:"これからの人生",track:"",
-  history:[],milestones:["18歳、潮見町で高校を卒業した。"]};}
+function initial(){return {age:9,wealth:0,debt:0,skill:13,bond:48,health:92,freedom:46,pressure:6,reputation:10,
+  job:"小学生",city:"潮見町",mentor:"小学校の担任",income:0,world:"子ども時代",project:"まだ決まっていない未来",track:"",
+  history:[],milestones:["9歳。潮見町の小学校に通っている。"]};}
 function capStats(s){["skill","bond","health","freedom","pressure","reputation"].forEach(k=>s[k]=clamp(Math.round(s[k]),0,100));s.wealth=Math.round(s.wealth);s.debt=Math.max(0,Math.round(s.debt));if(s.wealth<0){s.debt+=-s.wealth;s.wealth=0;}}
 function yearsPass(s,step){
  if(step>=9)return;
  const start=D.ages[step],next=D.ages[step+1],yrs=next-start;
- const rate=start>=67? -8 : start>=58? (s.income-400)*.10 : (s.income-360)*.18;
+ const rate=start<18?0:start>=69?-8:start>=61?(s.income-400)*.10:(s.income-360)*.18;
  const earned=Math.round(rate*yrs);
  const interest=Math.round(s.debt*.012*yrs);
  s.wealth+=earned-interest;
  s.health-=Math.round(yrs*(start>=58?1.5:start>=43?.65:.3));
  s.pressure+=Math.round(yrs*(s.pressure>63?-.1:.2));
  s.age=next;s.lastPassage={earned,interest,years:yrs};
+ if(step===2&&s.adultJob){s.job=s.adultJob;s.income=s.adultIncome;s.city=s.adultCity;s.milestones.push(next+"歳： "+s.job+"として働き始めた。");}
  capStats(s);
 }
 function effectText(delta,s){
@@ -123,12 +124,12 @@ function sceneFor(prefix,s){
    const a=t.q6[parseInt(prefix.slice(3,5),2)];
    return D.N(a[0],a[1],consequences(a[2],0,s),consequences(a[3],1,s));
  }
- const stage=depth-6,variant=parseInt(prefix.slice(-3),2);
- const a=late[stage][variant];
- const previous=s.history[s.history.length-1];
- const memory=previous?"以前『"+previous.choice+"』を選んだことで、現在の暮らしと人間関係ができた。":"";
- const title=interpolate(a[0],s), story=interpolate(a[1],s)+" "+memory;
- return D.N(title,story,consequences(interpolate(a[2],s),0,s),consequences(interpolate(a[3],s),1,s));
+ const stage=depth-6,arc=D.late[prefix.slice(0,3)][stage];
+ const last=s.history[s.history.length-1],first=s.history[0];
+ const memory=(last?" 前回『"+last.choice+"』を決めた。その結果、"+last.result+" ":"")+
+ (stage===0&&first?"9歳の日に『"+first.choice+"』と決めたことから続く人生だ。":"");
+ const burden=s.debt>400?" 借入は"+s.debt+"万円にのぼり、次の決断も自由ではない。":"";
+ return D.N(arc.title,arc.story+memory+burden,arc.options[0],arc.options[1]);
 }
 function evaluate(prefix){
  const s=initial();let p="";
@@ -209,12 +210,18 @@ function renderHistory(s){
 function renderScene(s,node){
  const t=D.tracks[s.track]||{name:s.world,color:"#9e7965",symbol:"↗"};
  $("scene").style.setProperty("--theme",t.color);
+ $("scene").dataset.zone=path.length<2?"coast":path.length<3?"youth":s.track||"coast";
+ $("scene").classList.toggle("is-ending",path.length===10);
+ const direction=path.slice(-1);
+ $("roadChoiceA").classList.toggle("taken",direction==="0");
+ $("roadChoiceB").classList.toggle("taken",direction==="1");
+ $("roadJourney").textContent=path.length?path.split("").map((v,i)=>D.ages[i]+"歳 "+(v==="0"?"左":"右")).slice(-4).join("　›　"):"まだ歩いていない道";
  $("sceneSymbol").textContent=t.symbol;
  $("scenePlace").textContent=s.city;
  $("sceneTrack").textContent=t.name;
  $("sceneJob").textContent=s.job;
  $("sceneYears").textContent=s.age+"歳";
- $("sceneLog").textContent=s.history.length?s.history[s.history.length-1].choice:"人生の起点";
+ $("sceneLog").textContent=s.history.length?s.history[s.history.length-1].choice:"ここから始まる";
  if(path.length<10){
    $("ending").classList.add("hidden");$("decisions").classList.remove("hidden");$("sceneTitle").textContent=node.title;
    $("sceneStory").textContent=node.story;
@@ -229,7 +236,7 @@ function renderScene(s,node){
      });
      card.querySelector(".choice-effects").textContent=effects.join("  /  ");
    });
-   $("decisionHint").textContent="AかBを選ぶと、以後の出来事も変わります。選択後に戻って別の人生を試せます。";
+   $("decisionHint").textContent="道の左側がA、右側がB。選んだ道の先では、仕事も出会いも変わっていきます。";
  }else{
    $("decisions").classList.add("hidden");$("ending").classList.remove("hidden");$("sceneTitle").textContent="あなたが生きた、一つの人生";
    $("sceneStory").textContent="10の決断を経て、あなたの人生はここにたどり着きました。別の選択なら、出会いも仕事も結末も変わっていたかもしれません。";
@@ -258,7 +265,7 @@ $("option1").addEventListener("click",()=>choose(1));
 $("startButton").addEventListener("click",()=>{$("welcome").classList.add("hidden");$("gameContent").classList.remove("hidden");render();});
 $("resume").addEventListener("click",()=>{$("welcome").classList.add("hidden");$("gameContent").classList.remove("hidden");render();});
 $("reset").addEventListener("click",()=>{replayStart();$("welcome").classList.add("hidden");$("gameContent").classList.remove("hidden");});
-$("playAgain").addEventListener("click",()=>{replayStart();});
+$("playAgain").addEventListener("click",()=>{replayStart();$("story").scrollIntoView({behavior:"smooth",block:"start"});});
 $("compareBtn").addEventListener("click",()=>{$("history").scrollIntoView({behavior:"smooth"});});
 document.body.addEventListener("click",e=>{const el=e.target.closest("[data-rewind]");if(el){const prefix=el.getAttribute("data-rewind");replay(prefix);$("welcome").classList.add("hidden");$("gameContent").classList.remove("hidden");}});
 document.addEventListener("keydown",e=>{if($("gameContent").classList.contains("hidden"))return;if(e.target.tagName==="INPUT"||e.altKey||e.metaKey||e.ctrlKey)return;if(e.key==="1"||e.key.toLowerCase()==="a")choose(0);if(e.key==="2"||e.key.toLowerCase()==="b")choose(1);});
