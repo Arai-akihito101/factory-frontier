@@ -149,6 +149,7 @@ function recordEnd(s){
  if(path.length!==10)return;
  store.endings[path]={title:endingTitle(s),wealth:s.wealth,debt:s.debt,bond:s.bond,health:s.health,job:s.job,city:s.city,
  history:s.history.map(h=>h.choice)};
+ if(store.previous && store.previous!==path)store.comparedTo=store.previous;
  store.previous=path;
  store.plays=(store.plays||0)+1;
  save();
@@ -221,7 +222,7 @@ function renderScene(s,node){
    ["0","1"].forEach((k,i)=>{
      const opt=node.options[i],card=$("option"+k);
      card.querySelector(".choice-headline").textContent=opt.label;
-     card.querySelector(".choice-details").textContent=opt.result;
+     card.querySelector(".choice-details").textContent=opt.set && (opt.set.job||opt.set.city) ? "この先の生活： "+[opt.set.job,opt.set.city].filter(Boolean).join(" / ") : "結果は、選んだあとに明らかになります。";
      const effects=Object.entries(opt.delta||{}).filter(([key,v])=>v!==0).slice(0,3).map(([key,v])=>{
        const label={wealth:"貯金",debt:"借入",skill:"技術",bond:"つながり",health:"健康",freedom:"自由",pressure:"負担",reputation:"信頼"}[key]||key;
        return label+" "+signed(v)+(key==="wealth"||key==="debt"?"万円":"");
@@ -239,7 +240,7 @@ function renderScene(s,node){
      ["最後の仕事",s.job],["暮らした土地",s.city],["貯金",fmt(s.wealth)+"万円"],
      ["借入",fmt(s.debt)+"万円"],["大切な人",s.mentor],["選んだ道",s.project]
    ].map(x=>'<div><small>'+escapeHtml(x[0])+'</small><strong>'+escapeHtml(x[1])+'</strong></div>').join("");
-   const prev=store.previous&&store.previous!==path?store.endings[store.previous]:null;
+   const prev=store.comparedTo&&store.comparedTo!==path?store.endings[store.comparedTo]:null;
    $("comparison").innerHTML=prev?"<h3>前の人生との違い</h3><p>"+escapeHtml(prev.title)+" と比べて</p>"+
     '<div class="compare-grid"><div>貯金 <b>'+signed(s.wealth-prev.wealth)+'万円</b></div><div>つながり <b>'+signed(s.bond-prev.bond)+'</b></div></div>':
     "<p>別の分岐を試すと、前の人生と比較できます。</p>";
