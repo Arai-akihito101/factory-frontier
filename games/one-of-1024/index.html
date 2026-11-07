@@ -40,12 +40,6 @@
 </section>
 <section id="gameContent" class="game-layout hidden">
   <div class="game-main">
-   <div class="progress-panel">
-    <div class="progress-header"><div><span class="eyebrow small">YOUR LIFE, YOUR DECISIONS</span><h2 id="turnCount">第1の選択</h2></div><span id="ageVal" class="age-badge">18歳</span></div>
-    <div class="steps-shell"><div class="steps-track"><div id="stepProgress" class="steps-progress"></div></div><div id="stepDots" class="steps-dots"></div></div>
-    <div class="route-code"><span>これまでの経路</span><b id="currentRoute">未選択</b></div>
-   </div>
-   
    <section class="story" id="story" aria-label="人生の選択">
      <div class="story-overline" id="decisionNumber">DECISION 01 / 10</div>
      <h2 id="sceneTitle">9歳。放課後の居場所</h2>
@@ -102,6 +96,13 @@
    </section>
   </div>
   <aside class="life-aside" aria-label="人生の記録">
+   <div class="progress-panel">
+    <div class="progress-header"><div><span class="eyebrow small">YOUR LIFE, YOUR DECISIONS</span><h2 id="turnCount">第1の選択</h2></div><span id="ageVal" class="age-badge">18歳</span></div>
+    <div class="steps-shell"><div class="steps-track"><div id="stepProgress" class="steps-progress"></div></div><div id="stepDots" class="steps-dots"></div></div>
+    <div class="route-code"><span>これまでの経路</span><b id="currentRoute">未選択</b></div>
+   </div>
+   
+
    <div class="aside-box status-box">
     <div class="aside-kicker">01 / 今のあなた</div><h2>人生の現在地</h2>
     <div class="identity">
@@ -120,7 +121,7 @@
   </aside>
 </section>
 </main>
-<footer class="sitefoot"><span>1/2<sup>10</sup> · LIFE IN BRANCHES · β 1.1</span><span>記録はこの端末のブラウザーに保存されます。アカウント不要。</span><a href="../../">FACTORY FRONTIER</a></footer>
+<footer class="sitefoot"><span>1/2<sup>10</sup> · LIFE IN BRANCHES · β 1.2</span><span>記録はこの端末のブラウザーに保存されます。アカウント不要。</span><a href="../../">FACTORY FRONTIER</a></footer>
 <dialog id="helpDialog" class="help-dialog"><h2>遊び方</h2><p>人生は9歳から始まり、10回の重要な決断で分岐します。毎回AかBのどちらかを選んでください。</p><p>同じ段階でも、それまで選んだ道が違えば、仕事・出会い・出来事が変わります。どの人生も別の人生とは合流しません。</p><p>右の「分岐の記録」から過去の決断へ戻れます。発見した結末は消えません。キーボードの <kbd>1</kbd> / <kbd>2</kbd> または <kbd>A</kbd> / <kbd>B</kbd> でも選択できます。</p><p>初期試作では最初の6段階を個別に作り、その後は状態と履歴に合わせて事件を発生させています。</p><button id="helpClose" type="button" class="primary-button">閉じる</button></dialog>
-<script src="./data.js"></script><script src="./story-v2.js"></script><script src="./app.js"></script>
+<script src="./data.js"></script><script src="./story-v2.js"></script><script src="./late-variants.js"></script><script src="./app.js"></script>
 </body></html>
