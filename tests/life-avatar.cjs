@@ -25,6 +25,18 @@ const sprites=await page.evaluate(()=>{
  const ages=[6,15,20,31,56,78].map(age=>A.sprite({age,arc:6,college:true,health:90,retired:age>=67},0));
  return {outfits:new Set(outfits).size,ages:new Set(ages).size,old:A.appearance({age:78,arc:6,health:90}),unwell:A.appearance({age:78,arc:6,health:35})};
 });assert.equal(sprites.outfits,8);assert.equal(sprites.ages,6);assert.equal(sprites.old.cane,false);assert.equal(sprites.unwell.cane,true);
+// Travel direction follows the latest choice, including reload and alternating routes.
+for(const path of ['0','1','10','01']){
+ await page.evaluate(path=>localStorage.setItem('life-1024-story-v3',JSON.stringify({current:path,found:{},visited:{}})),path);
+ await page.reload();
+ const x=()=>page.evaluate(()=>Number(document.getElementById('walkerPawn').getAttribute('transform').match(/translate\(([^ ]+)/)[1]));
+ const before=await x();await page.waitForTimeout(260);const after=await x();
+ const sign=path.endsWith('0')?-1:1;
+ assert.ok((after-before)*sign>0,`Travel must follow ${path}`);
+ assert.match(await page.locator('#walkerPixels').getAttribute('transform'),sign<0?/scale\(-2 2\)/:/scale\(2 2\)/);
+ await page.click('#nextBeat');
+ assert.match(await page.locator('#walkerPixels').getAttribute('transform'),sign<0?/scale\(-2 2\)/:/scale\(2 2\)/);
+}
 // Inspect a full late-life branch with real Japanese text and the normal stylesheet.
 await page.evaluate(()=>localStorage.setItem('life-1024-story-v3',JSON.stringify({current:'001001011',found:{},visited:{}})));
 await page.reload();await page.click('#skip');await page.screenshot({path:'/tmp/life-walk-mobile.png',fullPage:true});

@@ -108,12 +108,13 @@ function sprite(s,frame=0,direction='front'){
  if(a.cane){r(19,ty+16,3,1,'#8b7651');r(21,ty+17,1,7,'#8b7651');}
  return out.join('');
 }
+function walkingSign(){return state?.path?.endsWith('0')?-1:1;}
 function draw(frame,x,y){
  if(!state)return;
  const direction=mode==='walk'||departure?'side':'front';
  const key=[state.age,state.arc,state.college,state.retired,state.health<50,frame,direction].join('/');
  if(key!==lastKey){body.innerHTML=sprite(state,frame,direction);lastKey=key;}
- const scale=2,flip=departure?.bit===0?-1:1;
+ const scale=2,flip=departure?(departure.bit===0?-1:1):mode==='walk'?walkingSign():1;
  body.setAttribute('transform',`translate(${-14*scale*flip} ${-(state.age<12?25:state.age<18?24:23)*scale}) scale(${scale*flip} ${scale})`);
  pawn.setAttribute('transform',`translate(${Math.round(x/2)*2} ${y})`);
 }
@@ -126,7 +127,7 @@ function tick(now){
   const t=reduced.matches?1:Math.min(1,elapsed/departure.duration),e=t*t*(3-2*t),sign=departure.bit?1:-1;
   draw(frame,300+sign*100*e,218);
   if(t===1){const done=departure.resolve;departure=null;mode='idle';done();return;}
- }else{draw(frame,mode==='walk'?210+90*Math.min(1,elapsed/duration):300,218);}
+ }else{draw(frame,mode==='walk'?300-walkingSign()*90*(1-Math.min(1,elapsed/duration)):300,218);}
  if(walking&&!reduced.matches)frameId=requestAnimationFrame(tick);
 }
 function cancel(){if(frameId)cancelAnimationFrame(frameId);frameId=0;if(departure){const done=departure.resolve;departure=null;done();}}
