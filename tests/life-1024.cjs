@@ -35,7 +35,7 @@ const assert=require('node:assert/strict');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await page.reload();assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),p);
   await page.click('#skip');
-  await page.locator('[data-rewind]').nth(4).click();
+  await page.click('#tab-journey');await page.locator('[data-rewind]').nth(4).click();
   assert.equal((await page.evaluate(()=>LIFE_TEST.getStatus().path)).length,4);
  }
  await page.click('#skip');

@@ -44,3 +44,30 @@ with age. Story 3.0 route saves remain usable.
 
 `tests/life-avatar.cjs` checks eight distinct outfits, six age appearances,
 left/right movement, pause, restart during movement and responsive layout.
+
+
+## Story 4.0 — people, everyday scenes, and a readable game interface
+
+`life-connections.js` adds a mandatory introduction event at age 22 on all eight
+arcs, before the first adult decision. `metPerson` is applied by that beat, and
+`castOf` exposes no character before it. Fast-forward still simulates the
+introduction and the next decision recalls where they met. Character cards show
+role, place and age of meeting, a small portrait, and relationship appropriate to
+the choices already made. Younger colleagues are introduced before succession.
+
+Between adult choices: consequence, profession-specific daily event, evolving
+relationship scene, then the next decision. Reading has next/previous controls;
+back-reading pauses autoplay. Reviewing characters or the journal also pauses.
+The next scene and fast-forward are separate controls. Space advances one scene
+when focus is outside an interactive control. Dialogue titles and repeated
+context are shortened. All 1,024 routes remain reachable and retain consequences.
+
+`life-ui.css` replaces the accumulated overrides for the current pages, without
+changing archived versions. The pixel landscape uses local SVG shapes, seasonal
+colors and profession/location landmarks. The protagonist has revised face,
+shading, fixed-length stepping legs and eight work outfits. NPC portraits have
+separate palettes and hair. No external image/font fetches are required.
+
+Validation also includes `tests/life-connections.cjs`: introduction order on all
+eight arcs, unknown-before-met state, fast-forward, scene back/next, person cards,
+keyboard tabs and viewport overflow. Main exhaustive tests include intro state.

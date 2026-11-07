@@ -8,6 +8,7 @@ const defaultSaved=()=>({current:"",found:{},last:null,best:null,plays:0,visited
 let saved=defaultSaved();
 try{const v=JSON.parse(localStorage.getItem(key)||"null");if(v&&typeof v==="object")saved=Object.assign(defaultSaved(),v);}catch(_){}
 let path=typeof saved.current==="string"&&/^[01]{0,10}$/.test(saved.current)?saved.current:"";
+let beforeHelpPaused=false;
 let phase="travel",pending=null,beatIndex=0,timer=null,fast=false,paused=false,transitionEpoch=0,fromChoice=null;
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const int=x=>Math.round(x).toLocaleString("ja-JP");
@@ -57,7 +58,7 @@ function appendBeat(s,b,stage){
  earnBetween(s,b.age);
  alter(s,b.effects,b.fields);
  if(b.recap)return; // Display a chosen outcome once without duplicating the journal.
- const record={age:s.age,title:b.title,text:b.text,type:"beat",place:s.place,job:s.job,savings:s.savings,bond:s.bond,joy:s.joy};
+ const record={age:s.age,title:b.title,text:b.text,type:"beat",kind:b.kind||"daily",personId:b.personId||null,place:s.place,job:s.job,savings:s.savings,bond:s.bond,joy:s.joy};
  s.story.push(record);s.happenings.push(record);
 }
 function appendChoice(s,node,bit,stage){
@@ -97,7 +98,22 @@ function summarize(s){
  const narrative=C.ending?C.ending(s):null;
  return {title:narrative?narrative.title:title,text:narrative?narrative.text:job+" "+family+"。"+place+"で長い時間を過ごした。"+moneyLine+bond+feeling,route:s.path,decisions:s.choices.map(h=>({age:h.age,title:h.title})),net:money,place,home:s.home,career:s.job,bond:s.bond,joy:s.joy,age:s.age,children:s.children,partner:s.partner,savings:s.savings,debt:s.debt};
 }
+function portrait(s){return window.LIFE_AVATAR?'<svg viewBox="2 -2 25 23" aria-hidden="true" shape-rendering="crispEdges">'+window.LIFE_AVATAR.sprite({...s,npc:true,college:false,retired:false},0)+'</svg>':'';}
+function setSideTab(name){
+ const sidebar=document.querySelector('.sidebar');sidebar.dataset.side=name;
+ for(const id of ['current','people','journey']){$('panel-'+id).hidden=id!==name;$('tab-'+id).setAttribute('aria-selected',String(id===name));$('tab-'+id).tabIndex=id===name?0:-1;}
+}
+function showPeople(){setPaused(true);setSideTab('people');if(window.matchMedia?.('(max-width:780px)').matches)document.querySelector('.sidebar').scrollIntoView({behavior:'smooth',block:'start'});}
+function personButton(id,s){const c=C.castOf?.(s),el=$(id);el.classList.toggle('hidden',!c);if(c)el.innerHTML=portrait(s)+'<span><strong>'+esc(c.name)+' <small>'+esc(c.role)+'</small></strong><small>'+c.metAge+'歳で出会った、'+esc(c.relationship)+'</small></span>';}
+function renderPeople(s){
+ const c=C.castOf?.(s);$('peopleShortcut').classList.toggle('hidden',!c);
+ if(!c){$('castList').innerHTML='<p class="empty">まだ、長い付き合いになる人とは出会っていません。仕事や暮らしの中で知り合った人が、ここに記録されます。</p>';return;}
+ const face=portrait(s);$('peopleShortcut').innerHTML=face+'<span>'+esc(c.name)+'<small>'+esc(c.relationship)+' · 紹介を見る →</small></span>';
+ $('castList').innerHTML='<article class="cast-card"><div class="cast-top">'+face+'<div><h3>'+esc(c.name)+'</h3><small>'+esc(c.role)+'</small><br><span class="cast-tag">'+esc(c.relationship)+'</span></div></div><dl><dt>いつ、どこで出会った？</dt><dd>'+c.metAge+'歳 · '+esc(c.place)+'</dd><dt>どんな人？</dt><dd>'+esc(c.note)+'</dd></dl><p class="cast-recollection">'+esc(c.meeting)+'</p><p>'+(s.age===c.metAge?'この人との時間が、ここから始まります。':'出会ってから '+(s.age-c.metAge)+'年。この人との出来事も、年表で読み返せます。')+'</p></article>';
+}
+function sceneContext(s,personId,target){const c=C.castOf?.(s);$(target).classList.toggle('hidden',!personId||!c);if(personId&&c)personButton(target,s);}
 function renderStats(s){
+ window.LIFE_WORLD?.render(s);renderPeople(s);
  $("age").textContent=s.age;
  $("sideAge").textContent=s.age+"歳";
  $("place").textContent=C.textPlace(s);
@@ -119,6 +135,7 @@ function renderStats(s){
  const world=s.place==="大都市"?"city":s.place==="港町"?"coast":s.place==="地方都市"?"town":"rural";
  $("stage").dataset.world=world;
  const taken=path.slice(-1);
+ $("routeHint").textContent=s.age<18?"小さな世界が、広がっていく。":s.retired?"次の時間も、自分の歩幅で。":C.arcs?.[s.arc]?.title||"まだ、どこへでも行ける。";
  $("routeLeft").classList.remove("chosen");
  $("routeRight").classList.remove("chosen");
 }
@@ -136,15 +153,22 @@ function renderJournal(s){
   thread+='<button class="thread-node '+(done?"done ":"")+(active?"active":"")+'"'+(done?' data-rewind="'+path.slice(0,i)+'"':' disabled')+' title="'+age+'歳の分岐へ戻る"><b>'+(i+1)+'</b><small>'+age+'歳</small></button>';
  }
  $("thread").innerHTML=thread;
- $("chapters").innerHTML=journey.length?journey.map((h,i)=>'<div class="chapter"><span class="chapter-age">'+h.age+'歳</span><div><strong>'+esc(h.title)+'</strong><p>'+esc(h.text)+'</p></div></div>').reverse().join(""):'<p class="empty">まだ最初の分岐を選んでいません。</p>';
+ $("chapters").innerHTML=journey.length?journey.map((h,i)=>'<div class="chapter '+(h.kind==='meeting'?'meeting':'')+'"><span class="chapter-age">'+h.age+'歳</span><div><strong>'+esc(h.title)+'</strong><p>'+esc(h.text)+'</p></div></div>').reverse().join(""):'<p class="empty">まだ最初の分岐を選んでいません。</p>';
  const last=s.choices[s.choices.length-1];
  $("roadFooter").textContent=s.age+"歳。"+(last?"あのとき選んだ「"+last.title+"」の先を歩いている。":"人生はまだ、どこへでも続いている。");
 }
 function renderBeat(index){
+ $("comparisonPanel").hidden=true;
  const b=pending.beats[index],s=pending.snapshots[index];
  if(!b||!s)return;
  renderStats(s);renderJournal(s);
- $("travelKicker").textContent=b.age+"歳 — 人生の途中で";
+ const labels={meeting:'新しい出会い',relationship:'人との時間',result:'選んだ道の、その後',daily:'日々の暮らし',turn:'次の分かれ道へ',childhood:'子ども時代'};
+ $("travelKicker").textContent=b.age+"歳 · "+(labels[b.kind]||'人生の途中で');
+ $("beatCount").textContent=(index+1)+' / '+pending.beats.length;
+ $("beatTrack").innerHTML=pending.beats.map((_,i)=>'<span class="beat-dot '+(i<index?'done':i===index?'current':'')+'"></span>').join('');
+ $("prevBeat").disabled=index===0;
+ $("nextBeat").textContent=index===pending.beats.length-1?(path.length===10?'人生を振り返る →':'分かれ道へ →'):'次の場面へ →';
+ sceneContext(s,b.personId,'scenePerson');
  $("travelTitle").textContent=b.title;
  $("travelBody").textContent=b.text;
  $("latest").textContent=b.age+"歳。"+b.text;
@@ -162,8 +186,9 @@ function renderFork(){
  $("stage").classList.remove("moving");$("stage").classList.add("forking");
  $("fork").classList.remove("hidden");$("travel").classList.add("hidden");$("ending").classList.add("hidden");
  $("phaseLabel").textContent="人生の分かれ道";
- $("forkHead").textContent=s.age+"歳 — "+node.title;
- $("forkQuestion").textContent=node.story;
+ $("forkHead").textContent=node.title.includes(" — ")?node.title.split(" — ").at(-1):node.title.replace(/^\d+歳。/u,"");
+ $("forkCaption").textContent=s.age+"歳 · 第"+(path.length+1)+"の選択";
+ $("forkQuestion").textContent=node.story;sceneContext(s,node.personId,"forkPerson");
  for(let i=0;i<2;i++){$("choiceTitle"+i).textContent=node.options[i].title;$("choiceSub"+i).textContent=node.options[i].desc;}
  $("latest").textContent=s.age+"歳。「"+node.title+"」。これまでの暮らしを踏まえて、次の道を選びます。";
  phase="choice";
@@ -195,6 +220,7 @@ function finish(){
  document.querySelector(".ending-eyebrow").textContent="LIFE "+String(parseInt(path,2)+1).padStart(4,"0")+" / 1024";
  $("endingText").textContent=finalState.age+"歳。"+ending.text;
  $("latest").textContent="10回の選択から、一つの人生ができました。別の道を試すこともできます。";
+ $("comparisonPanel").hidden=false;
  $("compare").innerHTML=compareHtml(ending,previous||saved.best);
  $("compareBtn").classList.toggle("hidden",!(previous||saved.best));
 }
@@ -205,9 +231,7 @@ function schedule(){
  timer=setTimeout(()=>{
   timer=null;
   if(phase!=="travel")return;
-  beatIndex++;
-  if(beatIndex<pending.beats.length){renderBeat(beatIndex);schedule();}
-  else if(path.length===10)finish();else renderFork();
+  advanceBeat();
  },beatDuration(pending.beats[beatIndex]));
 }
 function travelToNext(){
@@ -245,11 +269,22 @@ function rewind(prefix){
 $("choice0").addEventListener("click",()=>select(0));
 $("choice1").addEventListener("click",()=>select(1));
 $("skip").addEventListener("click",()=>{if(phase!=="travel")return;if(timer)clearTimeout(timer);timer=null;beatIndex=pending.beats.length;if(path.length===10)finish();else renderFork();});
-$("pause").addEventListener("click",()=>{
- paused=!paused;$("pause").textContent=paused?"再生する":"一時停止";$("pause").setAttribute("aria-pressed",String(paused));$("stage").classList.toggle("paused",paused);
+function setPaused(value){
+ paused=value;$("pause").textContent=paused?"▶ 自動進行を再開":"Ⅱ 一時停止";$("pause").setAttribute("aria-pressed",String(paused));$("stage").classList.toggle("paused",paused);
  if(paused){if(timer)clearTimeout(timer);timer=null;if(phase!=="walking")window.LIFE_AVATAR?.pause();}
  else {window.LIFE_AVATAR?.resume();if(phase==="travel")schedule();}
-});
+}
+function advanceBeat(){
+ if(phase!=="travel")return;
+ if(timer)clearTimeout(timer);timer=null;
+ beatIndex++;if(beatIndex<pending.beats.length){renderBeat(beatIndex);schedule();}else if(path.length===10)finish();else renderFork();
+}
+$("pause").addEventListener("click",()=>setPaused(!paused));
+$("nextBeat").addEventListener("click",advanceBeat);
+$("prevBeat").addEventListener("click",()=>{if(phase!=="travel"||beatIndex===0)return;setPaused(true);renderBeat(--beatIndex);});
+for(const id of ['scenePerson','forkPerson','peopleShortcut'])$(id).addEventListener('click',showPeople);
+const tabNames=['current','people','journey'];
+for(const name of tabNames){$('tab-'+name).addEventListener('click',()=>{if(name!=='current')setPaused(true);setSideTab(name);});$('tab-'+name).addEventListener('keydown',e=>{const i=tabNames.indexOf(name);let next;if(e.key==='ArrowRight')next=(i+1)%3;else if(e.key==='ArrowLeft')next=(i+2)%3;else if(e.key==='Home')next=0;else if(e.key==='End')next=2;else return;e.preventDefault();if(next!==0)setPaused(true);setSideTab(tabNames[next]);$('tab-'+tabNames[next]).focus();});}
 $("speed").addEventListener("click",()=>{
  fast=!fast;$("speedLabel").textContent=fast?"早送り中":"通常の速度";$("speedSymbol").textContent=fast?"»":"◷";
  if(timer&&phase==="travel")schedule();
@@ -257,14 +292,15 @@ $("speed").addEventListener("click",()=>{
 $("restart").addEventListener("click",()=>restart(""));
 $("retry").addEventListener("click",()=>restart(""));
 $("compareBtn").addEventListener("click",()=>{$("compare").scrollIntoView({behavior:"smooth",block:"center"});});
-$("helpBtn").addEventListener("click",()=>$("helpDialog").showModal());
+$("helpBtn").addEventListener("click",()=>{beforeHelpPaused=paused;setPaused(true);$("helpDialog").showModal();});
 $("closeHelp").addEventListener("click",()=>$("helpDialog").close());
+$("helpDialog").addEventListener("close",()=>{if(!beforeHelpPaused)setPaused(false);});
 $("thread").addEventListener("click",e=>{const target=e.target.closest("[data-rewind]");if(target)rewind(target.getAttribute("data-rewind"));});
 document.addEventListener("keydown",e=>{
- if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.metaKey||e.ctrlKey||e.altKey||$("helpDialog").open)return;
+ if(["INPUT","TEXTAREA","BUTTON","A"].includes(e.target.tagName)||e.metaKey||e.ctrlKey||e.altKey||$("helpDialog").open)return;
  if(phase==="choice"&&(e.key==="1"||e.key.toLowerCase()==="a"))select(0);
  else if(phase==="choice"&&(e.key==="2"||e.key.toLowerCase()==="b"))select(1);
- else if(phase==="travel"&&e.key===" "){e.preventDefault();$("skip").click();}
+ else if(phase==="travel"&&e.key===" "){e.preventDefault();advanceBeat();}
 });
 travelToNext();
 window.LIFE_TEST={simulate,upcoming,summarize,start,ages:C.ages,getStatus:()=>({path,phase,beatIndex})};

@@ -5,12 +5,12 @@
 <meta name="theme-color" content="#f3efe4">
 <meta name="description" content="LIFE 1024 — 5歳から人生が自動で進み、10回の分かれ道から1,024通りの未来が生まれる無料の人生シミュレーション。ログイン不要。">
 <title>LIFE 1024｜人生シミュレーション</title>
-<link rel="stylesheet" href="./life-v2.css?v=3.1">
+<link rel="stylesheet" href="./life-ui.css?v=4.0">
 </head>
 <body>
 <div class="app">
 <header class="topbar">
- <a class="brand" href="./"><span class="brand-mark">LIFE 1024</span><span class="brand-detail">人生シミュレーション<small>10の選択、1,024通りの道</small></span></a>
+ <a class="brand" href="./"><span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-mark">LIFE 1024</span><span class="brand-detail">人生シミュレーション<small>10の選択、1,024通りの道</small></span></a>
  <div class="nav">
   <a href="./version-1-3.html" class="nav-item old-link">前の版</a>
   <a href="../../" class="nav-item parent-link">FACTORY FRONTIER</a>
@@ -19,40 +19,44 @@
 </header>
 <main class="layout">
 <section class="play" aria-label="人生の時間">
- <div class="play-top"><div><span class="eyebrow">ONE LIFE / INFINITE WHAT-IFS</span><h1>LIFE 1024。<em>どんな人生が待っている？</em></h1></div><span class="count" id="count">01 / 10</span></div>
+ <div class="play-top"><div><span class="eyebrow">10の選択、その間にも人生がある。</span><h1>ひとつの道を、歩いていく。</h1></div><span class="count" id="count">01 / 10</span></div>
  <div class="stage" id="stage" data-world="coast">
-  <div class="sky"><div class="sun"></div><div class="mountains"></div><div class="mountains hills"></div><div class="town"></div></div>
-<div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
-  <svg class="walker-road" viewBox="0 0 600 220" aria-hidden="true">
-    <path d="M300 236 L300 145 Q255 103 120 67 M300 145 Q345 103 480 67" fill="none" stroke="#9b9275" stroke-width="52"/>
-    <path d="M300 236 L300 145 Q255 103 120 67 M300 145 Q345 103 480 67" fill="none" stroke="#e4cca3" stroke-width="46"/>
-    <path d="M300 230 L300 148" fill="none" stroke="#fff3ce" stroke-width="2" stroke-dasharray="7 12"/>
-    <path id="routeLeft" class="road-fork" d="M300 145 Q255 103 120 67"/>
-    <path id="routeRight" class="road-fork" d="M300 145 Q345 103 480 67"/>
-    <g fill="#859875" opacity=".8"><rect x="75" y="138" width="5" height="14"/><rect x="67" y="145" width="20" height="4"/><rect x="490" y="156" width="5" height="12"/><rect x="482" y="161" width="20" height="4"/></g>
-    <g id="walkerPawn" transform="translate(300 205)"><ellipse cy="1" rx="23" ry="6" fill="#3b4e42" opacity=".22"/><g id="walkerPixels" transform="translate(-25 -78) scale(2.2)" shape-rendering="crispEdges"></g></g>
-  </svg><span class="avatar-caption" id="avatarCaption">あなた · 5歳</span>
- </div>
+
   <div class="stage-info"><div class="stage-date"><span id="age">5</span><small>歳</small></div><div class="stage-place"><strong id="place">小さな港町</strong><span id="phaseLabel">人生が始まる</span></div></div>
+<div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
+  <svg class="walker-road" viewBox="0 0 600 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g id="pixelLandscape" shape-rendering="crispEdges"></g>
+    <path d="M300 277 V177 Q260 140 135 99 M300 177 Q340 140 465 99" fill="none" stroke="#b6a580" stroke-width="49"/>
+    <path d="M300 277 V177 Q260 140 135 99 M300 177 Q340 140 465 99" fill="none" stroke="#e7d4a8" stroke-width="43"/>
+    <path id="routeLeft" class="road-fork" d="M300 177 Q260 140 135 99"/>
+    <path id="routeRight" class="road-fork" d="M300 177 Q340 140 465 99"/>
+    <g fill="#ccba92" shape-rendering="crispEdges"><rect x="286" y="236" width="4" height="2"/><rect x="309" y="215" width="6" height="2"/><rect x="259" y="154" width="4" height="2"/><rect x="380" y="122" width="5" height="2"/></g>
+    <g id="walkerPawn" transform="translate(300 226)"><ellipse cy="1" rx="23" ry="6" fill="#4d6049" opacity=".2"/><g id="walkerPixels" shape-rendering="crispEdges"></g></g>
+  </svg>
+  <span id="seasonLabel" class="season-label">春の気配</span>
+ </div>
+ <div class="avatar-ribbon"><span class="avatar-caption" id="avatarCaption">あなた · 5歳</span><span id="routeHint">まだ、どこへでも行ける。</span></div>
   <div id="travel" class="travel">
-    <div class="travel-kicker" id="travelKicker">5歳 — あの日のこと</div>
+    <div class="scene-meta"><div class="travel-kicker" id="travelKicker">5歳 — あの日のこと</div><span id="beatCount" class="beat-count">1 / 2</span></div><div id="beatTrack" class="beat-track" aria-label="この時期の出来事"></div>
     <h2 id="travelTitle">まだ、どんな未来も知らない。</h2>
-    <p id="travelBody"></p>
-    <div class="travel-bottom"><span class="travel-pulse"><i></i> 時間が流れていく</span><button id="skip" class="skip" type="button">次の分かれ道へ <span>»</span></button></div>
+    <p id="travelBody"></p><button id="scenePerson" class="scene-person hidden" type="button"></button>
+    <div class="travel-bottom"><button id="prevBeat" class="text-button" type="button">← 前の場面</button><button id="nextBeat" class="primary" type="button">次の場面へ →</button></div><button id="skip" class="skip" type="button">この時期をまとめて進む »</button>
   </div>
   <div id="fork" class="fork hidden">
-    <div class="fork-head" id="forkHead">6歳 — 最初の分かれ道</div>
-    <button class="fork-card left" id="choice0" type="button"><span class="fork-index">A / LEFT</span><strong id="choiceTitle0"></strong><span id="choiceSub0" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
-    <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B / RIGHT</span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
-    <div class="fork-question" id="forkQuestion">どちらの道を選ぶ？</div>
+    <div class="fork-caption" id="forkCaption">人生の分かれ道</div><h2 class="fork-head" id="forkHead">6歳 — 最初の分かれ道</h2>
+    <button class="fork-card left" id="choice0" type="button"><span class="fork-index">A <span>左の道</span></span><strong id="choiceTitle0"></strong><span id="choiceSub0" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B <span>右の道</span></span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <p class="fork-question" id="forkQuestion">どちらの道を選ぶ？</p><button id="forkPerson" class="scene-person hidden" type="button"></button>
   </div>
   <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
   <div class="road-footer" id="roadFooter">5歳のある日。人生はまだ、どこへでも続いている。</div>
  </div>
  <div class="understage"><div class="understory"><div class="under-kicker">いま起きたこと</div><p id="latest">時間が進むと、人生にいろいろなことが起きます。</p></div><div class="play-control"><button id="pause" class="speed-btn" type="button" aria-pressed="false">一時停止</button><button class="speed-btn" id="speed" type="button"><span id="speedSymbol">◷</span><span id="speedLabel">通常の速度</span></button><button class="sound-free" id="restart" type="button">↺ 最初から</button></div></div>
 </section>
-<aside class="sidebar">
-  <section class="panel current"><div class="panel-kicker">THIS LIFE, RIGHT NOW</div><div class="panel-title"><h2>いまの人生</h2><span class="panel-age" id="sideAge">5歳</span></div>
+<aside class="sidebar" data-side="current">
+ <div class="sidebar-tabs" role="tablist" aria-label="人生の情報"><button id="tab-current" role="tab" aria-controls="panel-current" aria-selected="true" data-panel="current">暮らし</button><button id="tab-people" role="tab" aria-controls="panel-people" aria-selected="false" data-panel="people" tabindex="-1">出会った人</button><button id="tab-journey" role="tab" aria-controls="panel-journey" aria-selected="false" data-panel="journey" tabindex="-1">年表</button></div>
+ <section class="panel people" id="panel-people" role="tabpanel" aria-labelledby="tab-people" hidden><div class="panel-kicker">一緒に時間を重ねる人</div><h2>出会った人</h2><div id="castList"></div></section>
+  <section class="panel current" id="panel-current" role="tabpanel" aria-labelledby="tab-current"><div class="panel-kicker">日々の暮らし</div><div class="panel-title"><h2>いまの人生</h2><span class="panel-age" id="sideAge">5歳</span></div>
    <div class="identity">
     <div><span>住んでいる場所</span><strong id="sidePlace">小さな港町</strong></div>
     <div><span>暮らし</span><strong id="sideHome">親と暮らす</strong></div>
@@ -64,21 +68,23 @@
     <div class="vital"><div class="vital-head"><span>人とのつながり</span><b id="bondValue">62</b></div><div class="vital-bar"><i id="bondBar"></i></div></div>
     <div class="vital"><div class="vital-head"><span>暮らしの充実</span><b id="joyValue">65</b></div><div class="vital-bar"><i id="joyBar"></i></div></div>
    </div>
-   <div class="life-snapshot" id="lifeSnapshot">まだ何者でもない。ここから人生が形になっていきます。</div>
+   <button id="peopleShortcut" class="people-shortcut hidden" type="button"></button><div class="life-snapshot" id="lifeSnapshot">まだ何者でもない。ここから人生が形になっていきます。</div>
   </section>
-  <section class="panel journey"><div class="panel-kicker">THE ROAD YOU TOOK</div><div class="panel-title"><h2>ここまでの道</h2><span class="found" id="found">0 / 1,024</span></div>
+  <section class="panel journey" id="panel-journey" role="tabpanel" aria-labelledby="tab-journey" hidden><div class="panel-kicker">ここまでの年月</div><div class="panel-title"><h2>ここまでの道</h2><span class="found" id="found">0 / 1,024</span></div>
     <p class="journey-sub">通ってきた道を押すと、そこから別の人生へ進めます。</p>
     <div class="thread" id="thread"></div>
     <div class="chapters" id="chapters"><p class="empty">まだ人生の記録はありません。</p></div>
   </section>
-  <section class="panel collection"><div class="panel-kicker">WHAT COULD HAVE BEEN</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
+  <section class="panel collection" id="comparisonPanel" hidden><div class="panel-kicker">もうひとつの人生</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
 </aside>
 </main>
-<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 3.1</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 4.0</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
 </div>
-<dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の分かれ道へ」で時間経過を省略できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
+<dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。登場人物は出会いの場面から登場し、「出会った人」で紹介を読み返せます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の場面へ」で一つずつ進められます。「この時期をまとめて進む」で選択まで移動できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
 <script src="./life-v2-data.js?v=2.1"></script>
-<script src="./life-v3-stories.js?v=3.1"></script>
-<script src="./life-avatar.js?v=3.1"></script>
-<script src="./life-v2.js?v=3.1"></script>
+<script src="./life-v3-stories.js?v=4.0"></script>
+<script src="./life-connections.js?v=4.0"></script>
+<script src="./life-world.js?v=4.0"></script>
+<script src="./life-avatar.js?v=4.0"></script>
+<script src="./life-v2.js?v=4.0"></script>
 </body></html>
