@@ -9,7 +9,7 @@ const first=await pose();await page.waitForTimeout(220);assert.notEqual(await po
 await page.click('#pause');const stopped=await pose();await page.waitForTimeout(260);assert.equal(await pose(),stopped);
 await page.click('#skip');await page.click('#choice0');await page.waitForTimeout(240);
 assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'0');
-const left=await pose();assert.ok(Number(left.match(/translate\(([^ ]+)/)[1])<300);
+const left=await pose();assert.equal(Number(left.match(/ ([^)]+)\)/)[1]),218,'Walking stays on the level footpath');assert.ok(Number(left.match(/translate\(([^ ]+)/)[1])<300);
 // Rewind during walking must invalidate the pending transition.
 await page.click('#restart');await page.waitForTimeout(1100);assert.equal(await page.evaluate(()=>LIFE_TEST.getStatus().path),'');
 await page.click('#skip');await page.click('#choice1');await page.waitForTimeout(240);

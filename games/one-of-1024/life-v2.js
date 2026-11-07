@@ -98,7 +98,7 @@ function summarize(s){
  const narrative=C.ending?C.ending(s):null;
  return {title:narrative?narrative.title:title,text:narrative?narrative.text:job+" "+family+"。"+place+"で長い時間を過ごした。"+moneyLine+bond+feeling,route:s.path,decisions:s.choices.map(h=>({age:h.age,title:h.title})),net:money,place,home:s.home,career:s.job,bond:s.bond,joy:s.joy,age:s.age,children:s.children,partner:s.partner,savings:s.savings,debt:s.debt};
 }
-function portrait(s){return window.LIFE_AVATAR?'<svg viewBox="2 -2 25 23" aria-hidden="true" shape-rendering="crispEdges">'+window.LIFE_AVATAR.sprite({...s,npc:true,college:false,retired:false},0)+'</svg>':'';}
+function portrait(s){return window.LIFE_AVATAR?'<svg viewBox="7 -3 15 16" aria-hidden="true" shape-rendering="crispEdges">'+window.LIFE_AVATAR.sprite({...s,npc:true,college:false,retired:false},0)+'</svg>':'';}
 function setSideTab(name){
  const sidebar=document.querySelector('.sidebar');sidebar.dataset.side=name;
  for(const id of ['current','people','journey']){$('panel-'+id).hidden=id!==name;$('tab-'+id).setAttribute('aria-selected',String(id===name));$('tab-'+id).tabIndex=id===name?0:-1;}
