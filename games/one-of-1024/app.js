@@ -162,11 +162,11 @@ function choose(bit){
  const after=evaluate(path);
  if(path.length===10)recordEnd(after);
  save();render();
- window.scrollTo({top:0,behavior:"smooth"});
+ 
 }
 function replay(prefix){
  if(!/^[01]{0,9}$/.test(prefix))return;
- path=prefix;toast="この分岐点からやり直せます。過去に見つけた人生の記録は残ります。";save();render();window.scrollTo({top:0,behavior:"smooth"});
+ path=prefix;toast="この分岐点からやり直せます。過去に見つけた人生の記録は残ります。";save();render();
 }
 function replayStart(){replay("");}
 const statDefs=[
