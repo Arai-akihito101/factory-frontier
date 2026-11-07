@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f3efe4">
+<meta name="description" content="小さな子どもから人生の終わりまで。時間は自動で進み、ときどき訪れる二択がまったく別の人生につながる。1/2¹⁰は無料の人生シミュレーションゲーム。">
+<title>1/2¹⁰ — もし、違う人生だったら。</title>
+<link rel="stylesheet" href="./life-v2.css?v=2.0">
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <a class="brand" href="./"><span class="brand-mark">1/2<sup>10</sup></span><span class="brand-detail">LIFE IN BRANCHES<small>もし、違う人生だったら。</small></span></a>
+ <div class="nav">
+  <a href="./version-1-3.html" class="nav-item old-link">前の版</a>
+  <a href="../../" class="nav-item parent-link">FACTORY FRONTIER</a>
+  <button id="helpBtn" type="button" class="nav-item">遊び方</button>
+ </div>
+</header>
+<main class="layout">
+<section class="play" aria-label="人生の時間">
+ <div class="play-top"><div><span class="eyebrow">ONE LIFE / INFINITE WHAT-IFS</span><h1>この人生は、<em>どこへ続くだろう。</em></h1></div><span class="count" id="count">01 / 10</span></div>
+ <div class="stage" id="stage" data-world="coast">
+  <div class="sky"><div class="sun"></div><div class="mountains"></div><div class="mountains hills"></div><div class="town"></div></div>
+  <svg class="road" viewBox="0 0 900 630" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="roadFill" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#d6b98e"/><stop offset="1" stop-color="#f0d9b7"/></linearGradient></defs>
+    <path class="land" d="M0 395 Q190 351 420 377 T900 366 L900 630 L0 630Z"/>
+    <path class="road-shadow" d="M385 630 Q422 499 435 419 L441 365 Q360 292 246 261 L212 222 L244 206 Q402 262 458 341 Q521 260 644 210 L687 223 L652 271 Q533 317 479 366 L481 419 Q494 512 533 630Z"/>
+    <path class="road-main" d="M410 630 Q435 501 448 418 L450 370 Q380 302 243 257 L224 224 L241 216 Q401 268 458 350 Q526 273 651 219 L675 230 L650 262 Q518 316 472 369 L476 418 Q490 518 519 630Z"/>
+    <path class="road-mark" d="M466 628 Q466 534 463 424 L461 365"/>
+    <path id="routeLeft" class="road-fork" d="M460 361 Q382 291 227 230"/>
+    <path id="routeRight" class="road-fork" d="M460 361 Q548 287 663 235"/>
+    <path class="road-edge" d="M410 630 Q435 501 448 418 L450 370 Q380 302 224 224"/>
+    <path class="road-edge" d="M519 630 Q490 518 476 418 L472 369 Q518 316 675 230"/>
+    <circle class="road-dot" cx="463" cy="445" r="7"/>
+  </svg>
+  <div class="stage-info"><div class="stage-date"><span id="age">5</span><small>歳</small></div><div class="stage-place"><strong id="place">小さな港町</strong><span id="phaseLabel">人生が始まる</span></div></div>
+  <div id="travel" class="travel">
+    <div class="travel-kicker" id="travelKicker">5歳 — あの日のこと</div>
+    <h2 id="travelTitle">まだ、どんな未来も知らない。</h2>
+    <p id="travelBody"></p>
+    <div class="travel-bottom"><span class="travel-pulse"><i></i> 時間が流れていく</span><button id="skip" class="skip" type="button">次の分かれ道へ <span>»</span></button></div>
+  </div>
+  <div id="fork" class="fork hidden">
+    <div class="fork-head" id="forkHead">6歳 — 最初の分かれ道</div>
+    <button class="fork-card left" id="choice0" type="button"><span class="fork-index">A / LEFT</span><strong id="choiceTitle0"></strong><span id="choiceSub0" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B / RIGHT</span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
+    <div class="fork-question" id="forkQuestion">どちらの道を選ぶ？</div>
+  </div>
+  <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
+  <div class="road-footer" id="roadFooter">5歳のある日。人生はまだ、どこへでも続いている。</div>
+ </div>
+ <div class="understage"><div class="understory"><div class="under-kicker">いま起きたこと</div><p id="latest">時間が進むと、人生にいろいろなことが起きます。</p></div><div class="play-control"><button class="speed-btn" id="speed" type="button"><span id="speedSymbol">◷</span><span id="speedLabel">通常の速度</span></button><button class="sound-free" id="restart" type="button">↺ 最初から</button></div></div>
+</section>
+<aside class="sidebar">
+  <section class="panel current"><div class="panel-kicker">THIS LIFE, RIGHT NOW</div><div class="panel-title"><h2>いまの人生</h2><span class="panel-age" id="sideAge">5歳</span></div>
+   <div class="identity">
+    <div><span>住んでいる場所</span><strong id="sidePlace">小さな港町</strong></div>
+    <div><span>暮らし</span><strong id="sideHome">親と暮らす</strong></div>
+    <div><span>仕事・学校</span><strong id="sideJob">小学校入学前</strong></div>
+    <div><span>年間収入</span><strong id="sideIncome">—</strong></div>
+   </div>
+   <div class="vitals">
+    <div class="vital"><div class="vital-head"><span>貯え</span><b id="saveValue">0万円</b></div><div class="vital-bar"><i id="saveBar"></i></div></div>
+    <div class="vital"><div class="vital-head"><span>人とのつながり</span><b id="bondValue">62</b></div><div class="vital-bar"><i id="bondBar"></i></div></div>
+    <div class="vital"><div class="vital-head"><span>暮らしの充実</span><b id="joyValue">65</b></div><div class="vital-bar"><i id="joyBar"></i></div></div>
+   </div>
+   <div class="life-snapshot" id="lifeSnapshot">まだ何者でもない。ここから人生が形になっていきます。</div>
+  </section>
+  <section class="panel journey"><div class="panel-kicker">THE ROAD YOU TOOK</div><div class="panel-title"><h2>ここまでの道</h2><span class="found" id="found">0 / 1,024</span></div>
+    <p class="journey-sub">通ってきた道を押すと、そこから別の人生へ進めます。</p>
+    <div class="thread" id="thread"></div>
+    <div class="chapters" id="chapters"><p class="empty">まだ人生の記録はありません。</p></div>
+  </section>
+  <section class="panel collection"><div class="panel-kicker">WHAT COULD HAVE BEEN</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
+</aside>
+</main>
+<footer class="footer"><span>1/2<sup>10</sup> — LIFE SIMULATOR <small>BETA 2.0</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+</div>
+<dialog id="helpDialog"><h2>遊び方</h2><p>人生は子ども時代から自動で進みます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。分かれた道は二度と合流せず、1,024通りの経路になります。ただし結末の文章や出来事は共通する部分もあります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の分かれ道へ」で時間経過を省略できます。</p><p>前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
+<script src="./life-v2.js?v=2.0"></script>
+</body></html>
