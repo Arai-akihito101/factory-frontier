@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f3efe4">
 <meta name="description" content="LIFE 1024 — 5歳から人生が自動で進み、10回の分かれ道から1,024通りの未来が生まれる無料の人生シミュレーション。ログイン不要。">
 <title>LIFE 1024｜人生シミュレーション</title>
-<link rel="stylesheet" href="./life-ui.css?v=5.4">
+<link rel="stylesheet" href="./life-ui.css?v=5.5">
 </head>
 <body>
 <div class="app">
@@ -26,7 +26,7 @@
 <div class="walker-scene" id="walkerScene" role="img" aria-label="人生の道を歩く主人公">
   <svg class="walker-road" viewBox="0 0 600 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <g id="pixelLandscape" shape-rendering="crispEdges"></g>
-    <g id="forkLandscape" class="fork-landscape"><image href="assets/fork-landscape.svg?v=5.4" width="600" height="260"/><path id="routeLeft" class="road-fork" d="M260 184 Q325 184 386 124H520"/>
+    <g id="forkLandscape" class="fork-landscape"><image href="assets/fork-landscape.svg?v=5.5" width="600" height="260"/><path id="routeLeft" class="road-fork" d="M260 184 Q325 184 386 124H520"/>
 <path id="routeRight" class="road-fork" d="M260 184 Q325 184 386 232H520"/></g>
     <g id="walkerPawn" transform="translate(300 218)"><path d="M-12 0h24v2h4v2h-32v-2h4z" fill="#514d49" opacity=".18"/><g id="walkerPixels" shape-rendering="crispEdges"></g></g>
   </svg>
@@ -45,7 +45,7 @@
     <button class="fork-card right" id="choice1" type="button"><span class="fork-index">B <span>右下の道 ↘</span></span><strong id="choiceTitle1"></strong><span id="choiceSub1" class="fork-desc"></span><span class="fork-arrow">この道へ進む ↗</span></button>
     <p class="fork-question" id="forkQuestion">どちらの道を選ぶ？</p><button id="forkPerson" class="scene-person hidden" type="button"></button>
   </div>
-  <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
+  <div id="ending" class="ending hidden"><div class="ending-eyebrow">THE LIFE THAT HAPPENED</div><h2 id="endingTitle">一つの人生が終わった。</h2><p id="endingText"></p><section id="lifeReview" class="life-review" aria-label="歩いてきた人生の道"></section><div class="ending-actions"><button id="retry" class="primary" type="button">別の人生を生きる <span>↗</span></button><button id="compareBtn" class="ghost" type="button">前の人生と比較</button></div></div>
   <div class="road-footer" id="roadFooter">5歳のある日。人生はまだ、どこへでも続いている。</div>
  </div>
  <div class="understage"><div class="understory"><div class="under-kicker">いま起きたこと</div><p id="latest">時間が進むと、人生にいろいろなことが起きます。</p></div><div class="play-control"><button id="pause" class="speed-btn" type="button" aria-pressed="false">一時停止</button><button class="speed-btn" id="speed" type="button"><span id="speedSymbol">◷</span><span id="speedLabel">通常の速度</span></button><button class="sound-free" id="restart" type="button">↺ 最初から</button></div></div>
@@ -75,13 +75,14 @@
   <section class="panel collection" id="comparisonPanel" hidden><div class="panel-kicker">もうひとつの人生</div><h2>もし別の道だったら</h2><p>結末まで到達すると、以前の人生と違いを比べられます。選んだ道の記録はこの端末に保存されます。</p><div id="compare" class="compare">初めての人生が進行中です。</div></section>
 </aside>
 </main>
-<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 5.4</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
+<footer class="footer"><span>LIFE 1024 — LIFE SIMULATOR <small>STORY 5.5</small></span><span>無料 · ログイン不要 · 記録はこの端末のみ</span><a href="./classic.html">オリジナル版</a></footer>
 </div>
 <dialog id="helpDialog"><h2>遊び方</h2><p>主人公は年齢と職業に合わせて姿を変え、選んだ道へ歩きます。登場人物は出会いの場面から登場し、「出会った人」で紹介を読み返せます。人生は子ども時代から自動で進みます。「一時停止」で文章をゆっくり読めます。途中で道が二つに分かれたときだけ、どちらへ進むかを選びます。</p><p>選択は10回。幼少期から8つの物語へ分かれ、それぞれの7回の選択が暮らしと後の事件に残ります。8 × 128 ＝ 1,024通りの人生の記録が生まれます。共通する舞台や事件も、選んだ対応とその結果が異なります。</p><p>人間関係、暮らし、仕事、住む場所、お金は、過去の選択とその後の出来事で変わっていきます。「次の場面へ」で一つずつ進められます。「この時期をまとめて進む」で選択まで移動できます。</p><p>この版の記録は旧版と分けて保存されます。前の道を押すと、その地点から別の人生を生き直せます。過去の結果はブラウザーに保存されます。</p><button id="closeHelp" type="button" class="primary">閉じる</button></dialog>
 <script src="./life-v2-data.js?v=2.1"></script>
-<script src="./life-v3-stories.js?v=5.4"></script>
-<script src="./life-connections.js?v=5.4"></script>
-<script src="./life-world.js?v=5.4"></script>
-<script src="./life-avatar.js?v=5.4"></script>
-<script src="./life-v2.js?v=5.4"></script>
+<script src="./life-v3-stories.js?v=5.5"></script>
+<script src="./life-connections.js?v=5.5"></script>
+<script src="./life-world.js?v=5.5"></script>
+<script src="./life-avatar.js?v=5.5"></script>
+<script src="./life-review.js?v=5.5"></script>
+<script src="./life-v2.js?v=5.5"></script>
 </body></html>

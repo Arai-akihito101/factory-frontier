@@ -219,6 +219,7 @@ function finish(){
  $("endingTitle").textContent=ending.title;
  document.querySelector(".ending-eyebrow").textContent="LIFE "+String(parseInt(path,2)+1).padStart(4,"0")+" / 1024";
  $("endingText").textContent=finalState.age+"歳。"+ending.text;
+ window.LIFE_REVIEW?.render(finalState,upcoming);
  $("latest").textContent="10回の選択から、一つの人生ができました。別の道を試すこともできます。";
  $("comparisonPanel").hidden=false;
  $("compare").innerHTML=compareHtml(ending,previous||saved.best);
