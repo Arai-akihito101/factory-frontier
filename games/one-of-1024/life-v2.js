@@ -73,9 +73,9 @@ function simulate(prefix){
  return s;
 }
 function upcoming(prefix){
- const base=simulate(prefix),s=structuredClone(base),stage=prefix.length;
+ const base=simulate(prefix),s=JSON.parse(JSON.stringify(base)),stage=prefix.length;
  const beats=C.makeBeats(s,stage,prefix),snapshots=[];
- for(const b of beats){appendBeat(s,b,stage);snapshots.push(structuredClone(s));}
+ for(const b of beats){appendBeat(s,b,stage);snapshots.push(JSON.parse(JSON.stringify(s)));}
  const node=stage<10?C.makeDecision(s,stage,prefix):null;
  return {base,beats,snapshots,ready:s,node,stage};
 }
@@ -119,7 +119,6 @@ function renderJournal(s){
  const opened=Object.keys(saved.found||{}).length;
  $("found").textContent=opened+" / 1,024";
  $("count").textContent=path.length===10?"10 / 10":String(path.length+1).padStart(2,"0")+" / 10";
- const block=document.createDocumentFragment();
  const journey=s.choices.slice(-8);
  const route=path.split("");
  let thread="";
